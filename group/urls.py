@@ -7,4 +7,5 @@ urlpatterns = [
     path('<int:pk>/', views.group_detail, name='group_detail'),
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('register/', views.register, name='register'),
+    path('profile_view/', views.profile_view, name='profile_view'),
 ]
