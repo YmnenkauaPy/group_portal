@@ -1,7 +1,11 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from group import models
+from django.contrib.auth.models import User
 from django.contrib.auth import login
 from group import forms
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.urls import reverse_lazy
 
 def group_list(request):
     groups = models.Group.objects.all()
@@ -31,7 +35,7 @@ def register(request):
 
     return render(request, 'registration/register.html', {'user_form': user_form, 'custom_user_form': custom_user_form})
     
-
+@login_required(login_url='/login/')
 def profile_view(request):
     user = request.user
     custom_user = models.CustomUser.objects.get(user=user) 
@@ -39,3 +43,22 @@ def profile_view(request):
     time_joined = user.date_joined #UTC
 
     return render(request, 'group/profile_view.html', {'custom_user': custom_user, 'time':time_joined})
+
+def update_profile(request):
+    user = request.user
+    if request.method == 'POST':
+        form = forms.ProfileForm(request.POST, request.FILES, instance=user.customuser)
+        
+        if form.is_valid():
+            profile = form.save(commit=False)
+            
+            user.username = form.cleaned_data['username']
+            user.save() 
+            profile.save() 
+            
+            return redirect('profile_view')
+    else:
+        form = forms.ProfileForm(instance=user.customuser, initial={'username': user.username})
+
+    return render(request, 'group/update_profile.html', {'form': form})
+

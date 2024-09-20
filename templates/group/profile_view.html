@@ -9,4 +9,9 @@
 <p>Status: {{ custom_user.status }}</p>
 <p>Data joined: {{ time }}</p>
 
+<form method="POST" action = "{% url 'update_profile' %}">
+    {% csrf_token %}
+    <button>Change profile details</button>
+</form>
+
 {% endblock %}
