@@ -40,7 +40,7 @@ def profile_view(request):
     user = request.user
     custom_user = models.CustomUser.objects.get(user=user) 
 
-    time_joined = user.date_joined #UTC
+    time_joined = user.date_joined
 
     return render(request, 'group/profile_view.html', {'custom_user': custom_user, 'time':time_joined})
 
