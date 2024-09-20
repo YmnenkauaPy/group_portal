@@ -15,7 +15,8 @@ class Group(models.Model):
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     members = models.ManyToManyField(CustomUser, related_name="member_of_groups")
-    admin = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="admin_groups")
-
+    moderators = models.ManyToManyField(CustomUser, related_name="moderators_of_groups")
+    admins = models.ManyToManyField(CustomUser, related_name="admins_of_groups")
+    
     def __str__(self):
         return self.title
