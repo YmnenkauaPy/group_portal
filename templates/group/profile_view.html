@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if custom_user.profile_picture %}
+    <img src="{{ custom_user.profile_picture.url }}" alt="Profile Picture" width="180px"/>
+{% endif %}
+<h2>{{ user.username }}</h2>
+<p>{{ custom_user.details }}</p>
+<p>Status: {{ custom_user.status }}</p>
+<p>Data joined: {{ time }}</p>
+
+{% endblock %}
