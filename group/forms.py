@@ -25,3 +25,8 @@ class ProfileForm(forms.ModelForm):
         widgets = {
             'profile_picture': forms.FileInput(),
         }
+
+class ForumThreadForm(forms.ModelForm):
+    class Meta:
+        model = models.ForumThread
+        fields = ['title', 'content']

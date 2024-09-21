@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Thread list</h2>
+<a href = "{% url 'thread_create' %}"> Create new thread</a>
+<br>
+    {% for thread in threads %}
+        <p><a href="{% url 'thread_detail' pk=thread.pk %}">{{ thread.title }}</a></p>
+        <small class="text-muted">Створено: {{ thread.created_at }}</small>
+    {% endfor %}
+{% endblock %}
+

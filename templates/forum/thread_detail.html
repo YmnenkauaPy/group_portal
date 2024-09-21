@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ thread.title }}</h2>
+<p>{{ thread.content }}</p>
+<small> Author: {{thread.aithor}} | Дата: {{ thread.created_at }}</small>
+<br>
+<a href="{% url 'edit_thread' pk=thread.pk %}">Edit</a>
+<br>
+<a href="{% url 'thread_list' %}">Back to thread list</a>
+{% endblock %}

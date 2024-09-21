@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from group import models
+from group.models import ForumThread
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from group import forms
@@ -61,4 +62,39 @@ def update_profile(request):
         form = forms.ProfileForm(instance=user.customuser, initial={'username': user.username})
 
     return render(request, 'group/update_profile.html', {'form': form})
+
+def thread_list(request):
+    threads = ForumThread.objects.all()
+    return render(request, 'forum/thread_list.html', {'threads': threads})
+
+def thread_detail(request, pk):
+    thread = get_object_or_404(ForumThread, pk=pk)
+    return render(request, 'forum/thread_detail.html', {'thread': thread})
+
+@login_required
+def thread_create(request):
+    if request.method == 'POST':
+        form = forms.ForumThreadForm(request.POST)
+        if form.is_valid():
+            thread = form.save(commit=False)
+            thread.author = request.user  # Установите автора
+            thread.save()
+            return redirect('thread_detail', pk=thread.pk)
+    else:
+        form = forms.ForumThreadForm()
+    
+    return render(request, 'forum/thread_create.html', {'form': form})
+    
+@login_required
+def thread_update(request, pk):
+    thread = get_object_or_404(ForumThread, pk=pk)
+    if request.method == 'POST':
+        form = forms.ForumThreadForm(request.POST, instance=thread)
+        if form.is_valid():
+            form.save()
+            return redirect('thread_detail', pk=thread.pk)
+    else:
+        form = forms.ForumThreadForm(instance=thread)
+    return render(request, 'forum/thread_form.html', {'form': form})
+
 
