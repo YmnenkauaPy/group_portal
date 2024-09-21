@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Update thread: {{ form.instance.title }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }} 
+    <button> Save changes</button>
+</form>
+{% if form.instance.pk %}
+    <a href="{% url 'thread_detail' pk=form.instance.pk %}">Back to thread</a>
+{% else %}
+    <a href="{% url 'thread_list' %}">Back to thread list</a>
+{% endif %}
+{% endblock %}
+
