@@ -3,9 +3,91 @@
 {% block content %}
 <h2>{{ thread.title }}</h2>
 <p>{{ thread.content }}</p>
-<small> Author: {{thread.aithor}} | Дата: {{ thread.created_at }}</small>
+<small> Author: {{thread.author}} | Date: {{ thread.created_at }}</small>
 <br>
 <a href="{% url 'edit_thread' pk=thread.pk %}">Edit</a>
 <br>
+<br>
 <a href="{% url 'thread_list' %}">Back to thread list</a>
+
+<div class="container mt-3"></div>
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    <h2>Comments</h2>
+    {% for comment in thread.comments.all %}
+        <div class="list-group-item">
+            <p>{{ comment.content }}</p>
+            {% if comment.media %}
+            <div class="comment-media mb-2">
+                <img src="{{ comment.media.url }}" alt="img" style="max-width: 200px;">
+                </div>
+        {% endif %}
+
+        <small>Author: {{ comment.author.username }}</small>
+        <div class="d-flex mb-2">
+            <button
+                type="button" id="{{ comment.id }}"
+                class="btn btn-sm {% if request.user in comment.likes.all %}btn-success{% else %}btn-outline-success{% endif %}" 
+                onclick="toggleLike(this.id)">
+                Like <span>{{ comment.likes.count }}</span>
+            </button>
+            
+            <form action="{% url 'edit_comment' comment.id %}" method="post" class="mr-2" {% if thread.author != request.user %}style="display:none"{% endif %}>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning" style="margin-left: 5px;">Edit</button>
+            </form>
+
+            <form action="{% url 'delete_comment' comment.id %}" method="get" {% if thread.author != request.user %}style="display:none"{% endif %}>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+        </div>
+    <br>
+    {% empty %}
+        <p>No comments</p>
+    {% endfor %}
+</div>
+
+<div class="container mt-3" style="margin-left: 15px;">
+    <h2>Add comment</h2>
+
+    <form {% if user.is_authenticated %}action="{% url 'thread_detail' thread.pk %}"{% else %}action="{% url 'login' %}"{% endif %} method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+</div>
+
+<script>
+    // Чтобы не перенаправлялось на начало страницы + считает
+    async function toggleLike(commentId) { 
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const url = `{% url 'like_comment' 0 %}`.replace('0', commentId);
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({}),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // Обновление UI на основе полученных данных
+                const likeButton = document.getElementById(commentId);
+                likeButton.classList.toggle('btn-success', data.liked);
+                likeButton.classList.toggle('btn-outline-success', !data.liked);
+                likeButton.querySelector('span').textContent = data.likes_count;
+            }
+        } catch (error) {
+            console.error('Error during fetch operation:', error);
+        }
+    }
+</script>
+
+
 {% endblock %}

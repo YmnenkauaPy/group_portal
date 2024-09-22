@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3" style="margin-left: 15px;">
+    <h2>Редагувати коментар</h2>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <textarea class="form-control" id="id_content" name="content">{{ comment.content }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            {% if form.media.value %}
+                <img src="{{ form.media.value.url }}" alt="current media" style="max-width: 400px;"><br><br>
+            {% endif %}
+            <input type="file" name="media" id="id_media">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Оновити</button>
+        <a href="{% url 'thread_detail' comment.thread.pk %}" class="btn btn-secondary">Назад до завдання</a>
+    </form>
+</div>
+{% endblock %}

@@ -5,8 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login
 from group import forms
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+from django.http import JsonResponse
 from django.urls import reverse_lazy
+from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, View 
 
 def group_list(request):
     groups = models.Group.objects.all()
@@ -67,9 +68,24 @@ def thread_list(request):
     threads = ForumThread.objects.all()
     return render(request, 'forum/thread_list.html', {'threads': threads})
 
-def thread_detail(request, pk):
-    thread = get_object_or_404(ForumThread, pk=pk)
-    return render(request, 'forum/thread_detail.html', {'thread': thread})
+class ThreadDetailView(DetailView):
+    model = models.ForumThread
+    context_object_name = 'thread'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = forms.CommentForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        comment_form = forms.CommentForm(request.POST, request.FILES)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.author = request.user
+            comment.thread = self.get_object()
+            comment.save()
+
+            return redirect('thread_detail', pk=comment.thread.pk)
 
 @login_required
 def thread_create(request):
@@ -77,7 +93,7 @@ def thread_create(request):
         form = forms.ForumThreadForm(request.POST)
         if form.is_valid():
             thread = form.save(commit=False)
-            thread.author = request.user  # Установите автора
+            thread.author = request.user 
             thread.save()
             return redirect('thread_detail', pk=thread.pk)
     else:
@@ -98,3 +114,43 @@ def thread_update(request, pk):
     return render(request, 'forum/thread_form.html', {'form': form})
 
 
+class CommentLikeToggle(View):
+    def post(self, request, *args, **kwargs):
+        comment = get_object_or_404(models.Comment, pk=self.kwargs.get('pk'))
+        like_qs = models.Like.objects.filter(comment=comment, user=request.user)
+        liked = False
+        if like_qs.exists():
+            like_qs.delete()
+        else:
+            models.Like.objects.create(comment=comment, user=request.user)
+            liked = True
+        
+        return JsonResponse({
+            'liked': liked,
+            'likes_count': comment.likes.count(),
+        })
+
+def edit_comment(request, pk):
+    comment = get_object_or_404(models.Comment, pk=pk)
+
+    if request.method == 'POST':
+        form = forms.CommentForm(request.POST, request.FILES, instance=comment)
+        
+        if form.is_valid():
+            form.save()
+            return redirect('thread_detail', pk=comment.thread.pk)
+    else:
+        form = forms.CommentForm(instance=comment)
+
+    return render(request, 'forum/edit_comment.html', {'form': form, 'comment': comment})
+
+def delete_comment(request, pk):
+    comment = get_object_or_404(models.Comment, pk=pk)
+
+    if request.method == 'POST':
+        comment.delete() 
+        return redirect('thread_detail', pk=comment.thread.pk) 
+
+    return render(request, 'forum/delete_comment.html', {'comment': comment})
+
+    
