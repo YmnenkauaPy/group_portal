@@ -30,3 +30,12 @@ class ForumThreadForm(forms.ModelForm):
     class Meta:
         model = models.ForumThread
         fields = ['title', 'content']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = models.Comment
+        fields = ['content', 'media']
+        widgets = {
+            'content': forms.Textarea(),
+            "media": forms.FileInput(),
+        }

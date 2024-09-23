@@ -12,6 +12,9 @@ urlpatterns = [
     path('update_profile/', views.update_profile, name='update_profile'),
     path('thread/new/', views.thread_create, name='thread_create'),  
     path('edit/<int:pk>/', views.thread_update, name='edit_thread'), 
-    path('detail/<int:pk>/', views.thread_detail, name='thread_detail'), 
+    path('detail/<int:pk>/', views.ThreadDetailView.as_view(template_name="forum/thread_detail.html"), name='thread_detail'), 
     path('threads/', views.thread_list, name='thread_list'),  
+    path('comment/update/<int:pk>/', views.edit_comment, name='edit_comment'), 
+    path('comment/delete/<int:pk>/', views.delete_comment, name='delete_comment'), 
+    path('comment/like/<int:pk>/', views.CommentLikeToggle.as_view(), name='like_comment'), 
 ]

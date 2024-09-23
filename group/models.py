@@ -38,3 +38,17 @@ class ForumPost(models.Model):
     def __str__(self):
         return f'{self.author} - {self.thread.title}'
 
+class Comment(models.Model):
+    thread = models.ForeignKey(ForumThread, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    media = models.FileField(upload_to = "comments_media/", blank=True, null=True)
+
+class Like(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='liked_comments')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('comment', 'user')
