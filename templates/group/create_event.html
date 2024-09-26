@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Create event:</h2>
+<form method="POST" action="{% url 'create_event' day_month_year %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>Create</button>
+</form>
+<a href = "{% url 'calendar' %}">Back to calendar</a>
+{% endblock %}

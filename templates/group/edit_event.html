@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3" style="margin-left: 15px;">
+    <h2>Edit event</h2>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <textarea class="form-control" name="name">{{ event.name }}</textarea>
+            <textarea class="form-control" name="description">{{ event.description }}</textarea>
+
+            <input type="date" class="form-control" name="day_month_year" value="{{ event.day_month_year|date:'Y-m-d' }}" readonly>
+            <input type="time" class="form-control" name="time" value="{{ event.time|time:'H:i' }}">
+            
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{% url 'calendar' %}" class="btn btn-secondary">Back to calendar</a>
+    </form>
+</div>
+{% endblock %}

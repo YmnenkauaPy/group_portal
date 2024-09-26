@@ -6,7 +6,7 @@
 <br>
     {% for thread in threads %}
         <p><a href="{% url 'thread_detail' pk=thread.pk %}">{{ thread.title }}</a></p>
-        <small class="text-muted">Створено: {{ thread.created_at }}</small>
+        <small class="text-muted">Created: {{ thread.created_at }}</small>
     {% endfor %}
 {% endblock %}
 
