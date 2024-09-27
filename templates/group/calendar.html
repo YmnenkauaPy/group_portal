@@ -234,6 +234,7 @@ document.querySelectorAll(".days").forEach(day => {
           content += `<h2>${event.name}</h2>
           <h5>${event.description}</h5>
           <h6>time: ${event.time}</h6>
+          {% if user.is_superuser %}
           <form action="/event/edit/${event.pk}" method="post" class="mr-2">
             {% csrf_token %}
             <button type="submit" class="btn btn-warning" style="margin-left: 5px;">Edit</button>
@@ -241,13 +242,14 @@ document.querySelectorAll(".days").forEach(day => {
           <form action="/event/delete/${event.pk}" method="get">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">Delete</button>
-          </form><br>`;
+          </form><br>{% endif %}`;
         })
-        content += `<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>`
+        content += `{% if user.is_superuser %}<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>{% endif %}`
         document.querySelector('.info').innerHTML = content;
       })
       .catch(error => {
-        document.querySelector('.info').innerHTML = `<i>${day_month_year}</i><br><h5>No events</h5><a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>`;
+        document.querySelector('.info').innerHTML = `<i>${day_month_year}</i><br><h5>No events</h5>
+        {% if user.is_superuser %}<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>{%endif%}`;
         console.error('Error:', error);
       });
   });
