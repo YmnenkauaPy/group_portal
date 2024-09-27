@@ -1,14 +1,19 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from group import models
-from group.models import ForumThread
+from group.models import ForumThread, Grade
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from group import forms
+from group.forms import GradeForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from datetime import datetime
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, View 
+from django.contrib.auth.decorators import user_passes_test
+
+def is_superuser(user):
+    return user.is_superuser
 
 def group_list(request):
     groups = models.Group.objects.all()
@@ -157,7 +162,7 @@ def delete_comment(request, pk):
 def calendar(request):
     return render(request, 'group/calendar.html')
 
-@login_required
+@user_passes_test(is_superuser)
 def create_event(request, day_month_year):
     day_month_year = datetime.strptime(day_month_year, "%Y-%m-%d").date()
 
@@ -192,7 +197,8 @@ def get_event_data(request, day_month_year):
             return JsonResponse({'error': 'Event not found'})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-    
+
+@user_passes_test(is_superuser)    
 def delete_event(request, pk):
     event = get_object_or_404(models.Event, pk=pk)
 
@@ -202,6 +208,7 @@ def delete_event(request, pk):
 
     return render(request, 'group/delete_event.html', {'event': event})
 
+@user_passes_test(is_superuser)
 def edit_event(request, pk):
     event = get_object_or_404(models.Event, pk=pk)
 
@@ -233,3 +240,38 @@ def events_for_month(request, year, month):
         })
 
     return JsonResponse(events_by_date)
+
+def grades_list(request):
+    grades = Grade.objects.all()
+    return render(request, 'grades/grades_list.html', {'grades': grades})
+
+@user_passes_test(is_superuser)
+def add_grade(request):
+    if request.method == 'POST':
+        form = GradeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('grades_list')
+    else:
+        form = GradeForm()  
+    return render(request, 'grades/add_grade.html', {'form': form})
+
+@user_passes_test(is_superuser)
+def edit_grade(request, pk):
+    grade = get_object_or_404(Grade, pk=pk)
+    if request.method == 'POST':
+        form = GradeForm(request.POST, instance=grade)
+        if form.is_valid():
+            form.save()
+            return redirect('grades_list')
+    else:
+        form = GradeForm(instance=grade)
+    return render(request, 'grades/edit_grade.html', {'form': form, 'grade': grade})
+
+@user_passes_test(is_superuser)
+def delete_grade(request, pk):
+    grade = get_object_or_404(Grade, pk=pk)
+    if request.method == "POST":
+        grade.delete()
+        return redirect('grades_list')
+    return render(request, 'grades/delete_grade.html', {"grade":grade})

@@ -23,4 +23,8 @@ urlpatterns = [
     path('event/edit/<int:pk>', views.edit_event, name='edit_event'), 
     path('event/<str:day_month_year>/', views.get_event_data, name='get_event_data'), 
     path('events/<int:year>/<int:month>/', views.events_for_month, name='events_for_month'),
+    path('grades/', views.grades_list, name='grades_list'),
+    path('grades/add/', views.add_grade, name='add_grade'),
+    path('grades/edit/<int:pk>/', views.edit_grade, name='edit_grade'),
+    path('grades/delete/<int:pk>/', views.delete_grade, name='delete_grade'),
 ]
