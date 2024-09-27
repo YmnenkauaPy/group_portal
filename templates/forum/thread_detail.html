@@ -5,7 +5,7 @@
 <p>{{ thread.content }}</p>
 <small> Author: {{thread.author}} | Date: {{ thread.created_at }}</small>
 <br>
-<a href="{% url 'edit_thread' pk=thread.pk %}">Edit</a>
+<a href="{% url 'edit_thread' pk=thread.pk %}" {% if thread.author != request.user %}style="display:none"{% endif %}>Edit</a>
 <br>
 <br>
 <a href="{% url 'thread_list' %}">Back to thread list</a>

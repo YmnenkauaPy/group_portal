@@ -17,15 +17,15 @@
             <td style="border: 1px solid; padding: 8px;">{{ grade.subject.name }}</td>
             <td style="border: 1px solid; padding: 8px;">{{ grade.grade }}</td>
             <td style="border: 1px solid; padding: 8px;">
-                <a href="{% url 'edit_grade' grade.id %}">Edit grade</a>
+                {% if user.is_superuser %}<a href="{% url 'edit_grade' grade.id %}">Edit grade</a>
                 <form action="{% url 'delete_grade' grade.id %}" method="post" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit">Delete</button>
-                </form>
+                </form>{% endif %}
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'add_grade' %}">Add new grade</a>
+{% if user.is_superuser %}<a href="{% url 'add_grade' %}">Add new grade</a>{% endif %}
 {% endblock %}
