@@ -1,5 +1,6 @@
 from django import forms
 from group import models
+from group.models import Grade
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -48,3 +49,8 @@ class EventForm(forms.ModelForm):
             'day_month_year': forms.DateInput(attrs={'readonly': True,}),
             'time': forms.TimeInput(attrs={'type': 'time'}),         
         }
+
+class GradeForm(forms.ModelForm):
+    class Meta:
+        model = models.Grade
+        fields = ['student', 'subject', 'grade']

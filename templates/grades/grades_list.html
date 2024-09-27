@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>List of grades</h2>
+<table>
+    <thead>
+        <tr>
+            <th style="border: 1px solid; padding: 8px;">Student</th>
+            <th style="border: 1px solid; padding: 8px;">Subject</th>
+            <th style="border: 1px solid; padding: 8px;">Grade</th>
+            <th style="border: 1px solid; padding: 8px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for grade in grades %}
+        <tr>
+            <td style="border: 1px solid; padding: 8px;">{{ grade.student.username }}</td>
+            <td style="border: 1px solid; padding: 8px;">{{ grade.subject.name }}</td>
+            <td style="border: 1px solid; padding: 8px;">{{ grade.grade }}</td>
+            <td style="border: 1px solid; padding: 8px;">
+                <a href="{% url 'edit_grade' grade.id %}">Edit grade</a>
+                <form action="{% url 'delete_grade' grade.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'add_grade' %}">Add new grade</a>
+{% endblock %}
