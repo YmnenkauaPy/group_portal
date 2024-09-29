@@ -4,10 +4,10 @@
 {% if custom_user.profile_picture %}
     <img src="{{ custom_user.profile_picture.url }}" alt="Profile Picture" width="180px"/>
 {% endif %}
-<h2>{{ user.username }}</h2>
+<h2>{{ custom_user.username }}</h2>
 <p>{{ custom_user.details }}</p>
 <p>Status: {{ custom_user.status }}</p>
-<p>Data joined: {{ time }}</p>
+<p>Data joined: {{ custom_user.date_joined }}</p>
 
 <form method="POST" action = "{% url 'update_profile' %}">
     {% csrf_token %}

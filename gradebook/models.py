@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class Subject(models.Model):
     name = models.CharField(max_length=40)
@@ -8,7 +8,7 @@ class Subject(models.Model):
         return self.name
 
 class Grade(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     grade = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -20,7 +20,7 @@ class Grade(models.Model):
         return f'{self.student} - {self.subject} - {self.grade}'
     
 class ReportCard(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     term = models.CharField(max_length=40)
 
     def __str__(self):

@@ -1,18 +1,11 @@
 from django import forms
-from authentication import models
-from django.contrib.auth.models import User
+from authentication.models import CustomUser
 from django.contrib.auth.forms import UserCreationForm
 
-class RegisterForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ['username', 'password1', 'password2']
-
-class CustomUserForm(forms.ModelForm):
-    class Meta:
-        model = models.CustomUser
-        fields = ['details', 'profile_picture']
+class CustomUserForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = CustomUser
+        fields = UserCreationForm.Meta.fields + ("details", "profile_picture", )
         widgets = {
             'profile_picture': forms.FileInput(),
         }
-
