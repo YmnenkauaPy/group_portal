@@ -7,11 +7,11 @@
         <p>Username: <textarea class="form-control" name="username">{{ user.username }}</textarea></p>
     </div>
     <div class="form-group">
-        <p>Details: <textarea class="form-control" name="details">{{ user.customuser.details }}</textarea></p>
+        <p>Details: <textarea class="form-control" name="details">{{ user.details }}</textarea></p>
     </div>
     <div class="form-group">
-        {% if user.customuser..profile_picture.value %}
-            <img src="{{ customuser.profile_picture.value.url }}" alt="current profile_picture" style="max-width: 400px;"><br><br>
+        {% if user.profile_picture %}
+            <img src="{{ user.profile_picture.url }}" alt="current profile_picture" style="max-width: 200px;"><br><br>
         {% endif %}
         <input type="file" name="profile_picture" id="id_media">
     </div>

@@ -4,7 +4,6 @@
 <h2>Register</h2>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ user_form.as_p }}
     {{ custom_user_form.as_p }}
     <button type = "submit">Register</button>
 </form>

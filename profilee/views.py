@@ -6,17 +6,15 @@ from profilee import forms
 
 @login_required(login_url='/login/')
 def profile_view(request):
-    user = request.user
-    custom_user = models.CustomUser.objects.get(user=user) 
+    user = models.CustomUser.objects.get(username=request.user.username)
 
-    time_joined = user.date_joined
-
-    return render(request, 'group/profile_view.html', {'custom_user': custom_user, 'time':time_joined})
+    return render(request, 'group/profile_view.html', {'custom_user': user})
 
 def update_profile(request):
     user = request.user
+    user = models.CustomUser.objects.get(username=request.user.username)
     if request.method == 'POST':
-        form = forms.ProfileForm(request.POST, request.FILES, instance=user.customuser)
+        form = forms.ProfileForm(request.POST, request.FILES, instance=user)
         
         if form.is_valid():
             profile = form.save(commit=False)
@@ -27,7 +25,7 @@ def update_profile(request):
             
             return redirect('profile_view')
     else:
-        form = forms.ProfileForm(instance=user.customuser, initial={'username': user.username})
+        form = forms.ProfileForm(instance=user)
 
     return render(request, 'group/update_profile.html', {'form': form})
 
