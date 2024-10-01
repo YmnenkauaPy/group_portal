@@ -4,15 +4,20 @@
 <h1>{{ group.title }}</h1>
 <p>{{ group.description }}</p>
 <p>{{ group.created_at }}</p>
-<p>Admin: {{ group.admin.user.username }}</p>
+<p>Admin: {{ group.admin.username }}</p>
 <h2>Members:</h2>
 <ul>
     {% for member in group.members.all %}
-        <li>{{ member.user.username }}</li>
+        <li>{{ member.username }}</li>
     {% empty %}
         <li>No members in this group</li>
     {% endfor %}
 </ul>
 
-<a href="{% url 'group_list' %}">Back to group list</a>
+<ul>
+    <li><a href="{% url 'group_list' %}">Back to group list</a></li>
+    <li><a href="{% url 'update_group' group.pk %}">Update group list</a></li>
+    <li><a href="{% url 'delete_group' group.pk %}">Delete group list</a></li>
+</ul>
+
 {% endblock %}
