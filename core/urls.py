@@ -29,6 +29,7 @@ urlpatterns = [
     path('', include("like.urls")),
     path('', include("event.urls")),
     path('', include("profilee.urls")),
+    path('', include("group_management.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

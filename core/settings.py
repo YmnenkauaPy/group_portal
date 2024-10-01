@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'comment',
     'like',
     'event',
-    'profilee'
+    'profilee',
+    'group_management',
 ]
 
 MIDDLEWARE = [
