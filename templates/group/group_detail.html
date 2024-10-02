@@ -16,8 +16,10 @@
 
 <ul>
     <li><a href="{% url 'group_list' %}">Back to group list</a></li>
+    {% if user == group.admin %}
     <li><a href="{% url 'update_group' group.pk %}">Update group list</a></li>
     <li><a href="{% url 'delete_group' group.pk %}">Delete group list</a></li>
+    {% endif %}
 </ul>
 
 {% endblock %}

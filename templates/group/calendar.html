@@ -233,15 +233,19 @@ document.querySelectorAll(".days").forEach(day => {
         data.forEach(event => {
           content += `<h2>${event.name}</h2>
           <h5>${event.description}</h5>
-          <h6>time: ${event.time}</h6>
-          {% if user.is_superuser %}
+          <h6>Group: ${event.group.title}</h6>
+          <h6>time: ${event.time}</h6>`;
+          
+          // Кнопки редактирования и удаления видны только для суперпользователя
+          
+          content += `{% if user.is_superuser %}
           <form action="/event/edit/${event.pk}" method="post" class="mr-2">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-warning" style="margin-left: 5px;">Edit</button>
+              {% csrf_token %}
+              <button type="submit" class="btn btn-warning" style="margin-left: 5px;">Edit</button>
           </form>
           <form action="/event/delete/${event.pk}" method="get">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Delete</button>
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Delete</button>
           </form><br>{% endif %}`;
         })
         content += `{% if user.is_superuser %}<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>{% endif %}`
@@ -254,6 +258,7 @@ document.querySelectorAll(".days").forEach(day => {
       });
   });
 })
+
 renderCalendar();
 
 </script>
