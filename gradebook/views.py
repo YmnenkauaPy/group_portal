@@ -2,12 +2,14 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.shortcuts import render
 from gradebook.models import Grade
 from gradebook.forms import GradeForm
+from django.contrib.auth.decorators import login_required
 
 
 def grades_list(request):
     grades = Grade.objects.all()
     return render(request, 'grades/grades_list.html', {'grades': grades})
 
+@login_required
 def add_grade(request):
     if request.method == 'POST':
         form = GradeForm(request.POST)

@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from group_management import forms
 from group import models
 
-
 @login_required
 def add_group(request):
     if request.method == 'POST':
@@ -18,7 +17,6 @@ def add_group(request):
         form = forms.GroupForm()
     return render(request, 'group_management/add_group.html', {'form': form})
 
-
 def update_group(request, pk):
     group = get_object_or_404(models.Group, pk=pk)
     if request.method == 'POST':
@@ -29,6 +27,7 @@ def update_group(request, pk):
     else:
         form = forms.GroupForm(instance=group)
     return render(request, 'group_management/update_group.html', {'form': form, 'group': group})
+
 
 def delete_group(request, pk):
     group = get_object_or_404(models.Group, pk=pk)

@@ -5,11 +5,13 @@ from django.shortcuts import render
 from event import forms
 from event import models
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 
 def calendar(request):
     return render(request, 'group/calendar.html')
 
+@login_required
 def create_event(request, day_month_year):
     day_month_year = datetime.strptime(day_month_year, "%Y-%m-%d").date()
 

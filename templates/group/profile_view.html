@@ -7,6 +7,7 @@
 <h2>{{ custom_user.username }}</h2>
 <p>{{ custom_user.details }}</p>
 <p>Status: {{ custom_user.status }}</p>
+<p>Role: {{ custom_user.role }}</p>
 <p>Data joined: {{ custom_user.date_joined }}</p>
 
 <form method="POST" action = "{% url 'update_profile' %}">
