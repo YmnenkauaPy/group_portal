@@ -3,7 +3,6 @@ from authentication import forms
 from django.shortcuts import redirect, render
 from django.contrib.auth import login
 
-
 def register(request):
     if request.method == 'POST':
         custom_user_form = forms.CustomUserForm(request.POST, request.FILES)

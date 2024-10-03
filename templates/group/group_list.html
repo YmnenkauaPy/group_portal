@@ -2,9 +2,11 @@
 
 {% block content %}
 <h2>List of Groups</h2>
-{% if request.user.is_superuser %}
-<a href="{% url 'add_group' %}" class="btn btn-primary">Add New Group</a>
+{% if user.is_authenticated and user.is_superuser or user.is_moderator %}
+    <a href="{% url 'add_group' %}" class="btn btn-primary">Add New Group</a>
 {% endif %}
+
+
 <ul>
     {% for group in groups %}
     <li>
