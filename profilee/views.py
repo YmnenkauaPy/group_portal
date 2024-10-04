@@ -1,18 +1,34 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from authentication import models
+from authentication.models import CustomUser
+from group.models import Group
 from profilee import forms
+from django.db.models import Q
 
 
 @login_required(login_url='/login/')
 def profile_view(request):
-    user = models.CustomUser.objects.get(username=request.user.username)
+    user = CustomUser.objects.get(username=request.user.username)
+    groups = Group.objects.filter(
+    Q(admin=user) | Q(moderators=user) | Q(members=user)).distinct()
 
-    return render(request, 'group/profile_view.html', {'custom_user': user})
+    user_roles = []
+    for group in groups:
+        if user == group.admin:
+            role = 'Admin'
+        elif user in group.moderators.all():
+            role = 'Moderator'
+        elif user in group.members.all():
+            role = 'Member'
+        else:
+            role = 'Not a member'
+        user_roles.append({'group': group, 'role': role})
+    
+    return render(request, 'group/profile_view.html', {'custom_user':user, 'user_roles': user_roles})
 
 def update_profile(request):
     user = request.user
-    user = models.CustomUser.objects.get(username=request.user.username)
+    user = CustomUser.objects.get(username=request.user.username)
     if request.method == 'POST':
         form = forms.ProfileForm(request.POST, request.FILES, instance=user)
         

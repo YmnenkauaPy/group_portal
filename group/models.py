@@ -7,6 +7,7 @@ class Group(models.Model):
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="member_of_groups")
+    moderators = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="moderators_of_groups")
     admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="admin_groups")
     
     def __str__(self):
