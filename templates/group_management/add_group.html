@@ -1,10 +1,82 @@
-{% extends 'base.html'%}
-{% block content%}
+{% extends 'base.html' %}
+{% block content %}
 <h2>Create new group</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <p>Hold down “Control”, or “Command” on a Mac, to select more than one.</p>
+    
+    <input id="search" type="text" placeholder="Search for users" oninput="search_users()" autocomplete="off">
+    <div id="searchResults"></div>
+    
+    <h5 id="selectedUsersHeader" style="display: none;">Selected Users:</h5>
+    <ul id="selectedUsersList"></ul>
+    <input type="hidden" name="selected_users" id="selectedUsersInput">  
+    
     <button type="submit">Create Group</button>
 </form>
-{% endblock%}
+
+<script>
+    let selectedUsers = [];
+
+    function selectUser(user) {
+        if (!selectedUsers.some(selectedUser => selectedUser.id === user.id)) {
+            selectedUsers.push(user);  
+            updateSelectedUsersList();
+        }
+    }
+
+    function updateSelectedUsersList() {
+        const selectedUsersList = document.getElementById('selectedUsersList');
+        const selectedUsersHeader = document.getElementById('selectedUsersHeader');
+        
+        selectedUsersList.innerHTML = ''; 
+
+        if (selectedUsers.length > 0) {
+            selectedUsersHeader.style.display = 'block';  
+            selectedUsers.forEach(user => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${user.username}, id: ${user.id}`;  
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove from list';  
+                removeButton.onclick = () => removeUser(user.id);  
+
+                listItem.appendChild(removeButton);  
+                selectedUsersList.appendChild(listItem); 
+            });
+            document.getElementById('selectedUsersInput').value = selectedUsers.map(user => user.id).join(','); 
+        } else {
+            selectedUsersHeader.style.display = 'none';  
+        }
+    }
+
+    async function search_users() {
+        const query = document.getElementById('search').value;
+        const response = await fetch(`/search/?q=${query}`);
+        const data = await response.json();
+        
+        const searchResultsContainer = document.getElementById('searchResults');
+        searchResultsContainer.innerHTML = ''; 
+
+        if (data.users.length > 0) {
+            data.users.forEach(user => {
+                const button = document.createElement('button');
+                button.type = 'button';  
+                button.textContent = `${user.username}, id: ${user.id}`; 
+                button.onclick = () => selectUser(user);  
+                searchResultsContainer.appendChild(button);
+            });
+        } else {
+            const noResultsMessage = document.createElement('p');
+            noResultsMessage.textContent = 'No users found.';  
+            searchResultsContainer.appendChild(noResultsMessage);
+        }
+    }
+
+    function removeUser(userId) {
+        selectedUsers = selectedUsers.filter(user => user.id !== userId);
+        updateSelectedUsersList(); 
+    }
+
+</script>
+{% endblock %}
