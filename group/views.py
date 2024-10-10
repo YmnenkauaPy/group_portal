@@ -7,7 +7,7 @@ def group_list(request):
     if not request.user.is_authenticated:
         groups = []
     else:
-        user = CustomUser.objects.get(username=request.user.username)
+        user = CustomUser.objects.get(pk=request.user.id)
         groups = Group.objects.filter(Q(admin=user) | Q(moderators=user) | Q(members=user)).distinct()
 
     return render(request, 'group/group_list.html', {'groups': groups})
@@ -24,6 +24,7 @@ def group_detail(request, pk):
             role = "Moderator"
         if member == group.admin:
             role = "Admin"
+
         members_with_roles.append({'user': member, 'role': role})
         
     return render(request, 'group/group_detail.html', {'group': group, 'members_with_roles': members_with_roles})

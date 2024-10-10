@@ -8,7 +8,14 @@
 <h2>Members:</h2>
 <ul>
     {% for member_info in members_with_roles %}
-        <li>{{ member_info.user.username }} <small>{{ member_info.role }}</small></li>
+        <li>{{ member_info.user.username }} <small>{{ member_info.role }}</small> 
+            {% if member_info.role != 'Moderator' and user == group.admin %}
+            <a href="{% url 'add_moderator' group.pk member_info.user.pk %}">make moderator</a>
+            {% endif %}
+            {% if member_info.role != 'Member' and user == group.admin %}
+            <a href="{% url 'remove_moderator' group.pk member_info.user.pk %}">delete from moderator</a>
+            {% endif %}
+        </li>
     {% empty %}
         <li>No members in this group</li>
     {% endfor %}

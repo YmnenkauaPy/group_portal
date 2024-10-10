@@ -53,4 +53,19 @@ def delete_group(request, pk):
 
         return redirect('group_list') 
     return render(request, 'group_management/delete_group.html', {'group': group})
+
+def add_moderator(request, group, user):
+    group = get_object_or_404(models.Group, pk=group)
+    user = get_object_or_404(CustomUser, pk=user)
+    group.moderators.add(user)
+
+    return redirect('group_detail', pk=group.pk)
+
+def remove_moderator(request, group, user):
+    group = get_object_or_404(models.Group, pk=group)
+    user = get_object_or_404(CustomUser, pk=user)
+    
+    group.moderators.remove(user)
+    
+    return redirect('group_detail', pk=group.pk)
     
