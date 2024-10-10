@@ -9,18 +9,40 @@
 <ul>
     {% for member_info in members_with_roles %}
         <li>{{ member_info.user.username }} <small>{{ member_info.role }}</small> 
-            {% if member_info.role != 'Moderator' and user == group.admin %}
-            <a href="{% url 'add_moderator' group.pk member_info.user.pk %}">make moderator</a>
+            {% if member_info.role != 'Moderator' and member_info.user.id != user.id %}
+                {% if user == group.admin or user in group.moderators.all %}
+                    <a href="{% url 'add_moderator' group.pk member_info.user.pk %}">make moderator</a>
+                {% endif %}
             {% endif %}
-            {% if member_info.role != 'Member' and user == group.admin %}
-            <a href="{% url 'remove_moderator' group.pk member_info.user.pk %}">delete from moderator</a>
+            {% if member_info.role != 'Member' and member_info.user.id != user.id %}
+                {% if user == group.admin or user in group.moderators.all %}
+                    <a href="{% url 'remove_moderator' group.pk member_info.user.pk %}">delete from moderator</a>
+                {% endif %}
+            {% endif %}
+
+            {% if user == group.admin or user in group.moderators.all %}
+                {% if member_info.user.id != user.id %}
+                    <a href="{% url 'delete_member' group.pk member_info.user.pk %}">delete from group</a>
+                {% endif %}
             {% endif %}
         </li>
     {% empty %}
         <li>No members in this group</li>
     {% endfor %}
 </ul>
+{% if user == group.admin or user in group.moderators.all %}
+<form action="{% url 'add_member' group.pk %}" method="POST">
+    {% csrf_token %}
+    <button>add member</button>
+    <input id="search" type="text" placeholder="Search for users" oninput="search_users()" autocomplete="off">
+    <div id="searchResults"></div>
+    
+    <h5 id="selectedUsersHeader" style="display: none;">Selected Users:</h5>
+    <ul id="selectedUsersList"></ul>
+    <input type="hidden" name="selected_users" id="selectedUsersInput">
 
+</form>
+{% endif %}
 <ul>
     <li><a href="{% url 'group_list' %}">Back to group list</a></li>
     {% if user == group.admin %}
@@ -29,4 +51,69 @@
     {% endif %}
 </ul>
 
+
+<script>
+    let selectedUsers = [];
+
+    function selectUser(user) {
+        if (!selectedUsers.some(selectedUser => selectedUser.id === user.id)) {
+            selectedUsers.push(user);  
+            updateSelectedUsersList();
+        }
+    }
+
+    function updateSelectedUsersList() {
+        const selectedUsersList = document.getElementById('selectedUsersList');
+        const selectedUsersHeader = document.getElementById('selectedUsersHeader');
+        
+        selectedUsersList.innerHTML = ''; 
+
+        if (selectedUsers.length > 0) {
+            selectedUsersHeader.style.display = 'block';  
+            selectedUsers.forEach(user => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${user.username}, id: ${user.id}`;  
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove from list';  
+                removeButton.onclick = () => removeUser(user.id);  
+
+                listItem.appendChild(removeButton);  
+                selectedUsersList.appendChild(listItem); 
+            });
+            document.getElementById('selectedUsersInput').value = selectedUsers.map(user => user.id).join(','); 
+        } else {
+            selectedUsersHeader.style.display = 'none';  
+        }
+    }
+
+    async function search_users() {
+        const query = document.getElementById('search').value;
+        const response = await fetch(`/search/?q=${query}`);
+        const data = await response.json();
+        
+        const searchResultsContainer = document.getElementById('searchResults');
+        searchResultsContainer.innerHTML = ''; 
+
+        if (data.users.length > 0) {
+            data.users.forEach(user => {
+                const button = document.createElement('button');
+                button.type = 'button';  
+                button.textContent = `${user.username}, id: ${user.id}`; 
+                button.onclick = () => selectUser(user);  
+                searchResultsContainer.appendChild(button);
+            });
+        } else {
+            const noResultsMessage = document.createElement('p');
+            noResultsMessage.textContent = 'No users found.';  
+            searchResultsContainer.appendChild(noResultsMessage);
+        }
+    }
+
+    function removeUser(userId) {
+        selectedUsers = selectedUsers.filter(user => user.id !== userId);
+        updateSelectedUsersList(); 
+    }
+
+</script>
 {% endblock %}
