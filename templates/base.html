@@ -4,27 +4,71 @@
     <meta charset="UTF-8">
     <title>Portal_group</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Willy Wonkas - Personal Portfolio Website Template" />
+	<meta name="keywords" content="blog, business card, creative, creative portfolio, cv theme, online resume, personal, portfolio, professional cv, responsive portfolio, resume, resume theme, vcard" />
+	<meta name="author" content="willy wonka" />
+    <title>Willy Wonkas - Personal Portfolio Website Template</title>
+  <!--favicon-img--> 
+   <link rel="icon" type="/image/png" href="static/images/favicon.png">
+   <!--favicon-img-->
+   <!--main css file should not be removed -->
+    <link rel="stylesheet" href="/static/css/index.css">
+    <!--main css file-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="btn btn-link navbar-brand" style="padding: 1;" href="{% url 'group_list' %}">Home</a>
-                {% if not user.is_authenticated %}<a class="btn btn-link navbar-brand" style="padding: 1;" href="{% url 'login' %}">Login</a>
-                <a class="btn btn-link navbar-brand" style="padding: 1;" href="{% url 'register' %}">Register</a>
-                {% else %}
-                    <form action="{% url 'logout' %}" method="POST">
-                        {% csrf_token %}
-                        <button class="btn btn-link navbar-brand" style="padding: 1;">Logout</button>
-                    </form>
-                {% endif %}
-                <a class="btn btn-link navbar-brand" style="padding: 1;" href="{% url 'profile_view' %}">Profile</a> 
-                <a class="btn btn-link navbar-brand" style="padding: 1;" href="{% url 'thread_list' %}">Thread list</a>
-                <a class="btn btn-link navbar-brand" style="padding: 1;" href="{% url 'calendar' %}">Calendar</a>
-                <a class="btn btn-link navbar-brand" style="padding: 1;" href="{% url 'grades_list' %}">Gradebook</a>
-        </nav>
+        <!--Menubar-->
+        <div id="navigation-bar">
+            <div class="menubar">
+                <span class="first-span"></span>
+                <span class="second-span"></span>
+                <span class="third-span"></span>
+            </div>
+        </div>
+        <!--Menubar End-->
+
+
     </header>
+    <div id="navigation-content">
+        <div class="navigation-close">
+            <span class="close-first"></span>
+            <span class="close-second"></span>
+        </div>
+        <div class="navigation-links">
+            <a href="{% url 'group_list' %}" data-text="HOME" id="home-link">HOME</a>
+            <a href="{% url 'profile_view' %}" data-text="PROFILE" id="portfolio-link">PROFILE</a>
+            
+            {% if not user.is_authenticated %}
+                <a href="{% url 'login' %}" data-text="LOGIN" id="about-link">LOGIN</a>
+                <a href="{% url 'register' %}" data-text="REGISTER" id="blog-link">REGISTER</a>
+            {% else %}
+                <form action="{% url 'logout' %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <a href="#" data-text="LOGOUT" id="logout-link" onclick="this.closest('form').submit(); return false;">LOGOUT</a>
+            </form>
+            {% endif %}
+            
+            <a href="{% url 'thread_list' %}" data-text="THREAD LIST" id="thread-link">THREAD LIST</a>
+            <a href="{% url 'calendar' %}" data-text="CALENDAR" id="calendar-link">CALENDAR</a>
+            <a href="{% url 'grades_list' %}" data-text="GRADEBOOK" id="gradebook-link">GRADEBOOK</a>
+        </div>
+    </div>
+    
+    <div class="container main-content">
     {% block content %}
     {% endblock %}
+    </div>
+
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/particles.js"></script>
+    <script src="/static/js/particles.min.js"></script>
+    <script src="/static/js/index.js"></script>  <!--particles script-->
+    <script>
+  particlesJS("particles", {"particles":{"number":{"value":40,"density":{"enable":true,"value_area":800}},"color":{"value":"#ffffff"},"shape":{"type":"circle","stroke":{"width":0,"color":"#000000"},"polygon":{"nb_sides":5},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.5,"random":false,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":3,"random":true,"anim":{"enable":false,"speed":40,"size_min":0.1,"sync":false}},"line_linked":{"enable":true,"distance":150,"color":"#ffffff","opacity":0.4,"width":1},"move":{"enable":true,"speed":6,"direction":"none","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"repulse"},"onclick":{"enable":true,"mode":"push"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true});
+    </script>
+
 </body>
 </html>
 
