@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load custom_tags %}
+<h2>List of materials</h2>
+{% if user.is_authenticated and user.is_superuser %}
+    <a href="{% url 'add_material' %}" class="btn btn-primary">Add new material</a>
+{% endif %}
+
+<ul>
+    {% for material in materials %}
+        <li>
+            <div>
+                <h4>{{material.name}}</h4>
+                {% if material.content.url|endswith:".jpg" or material.content.url|endswith:".png" or material.content.url|endswith:".jpeg" %}
+                    <img src="{{ material.content.url }}" alt="img" style="max-width: 100px;">
+                {% elif material.content.url|endswith:".mp4" %}
+                    <video width="320" height="240" controls>
+                        <source src="{{ material.content.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                {% endif %}
+                <br>
+                <small>group: {{ material.group.title }}</small><br>
+                <small>author: {{ material.author }}</small>
+                <a href="{% url 'edit_material' material.pk %}">edit material</a>
+                <a href="{% url 'delete_material' material.pk %}">delete material</a>
+            </div>
+        </li>
+    {% empty %}
+        <li>No materials</li>
+    {% endfor %}
+</ul>
+{% endblock %}

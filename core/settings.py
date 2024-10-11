@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'profilee',
     'group_management',
     'voting_system',
+    'materials',
 ]
 
 MIDDLEWARE = [
