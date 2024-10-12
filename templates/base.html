@@ -18,9 +18,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
 </head>
 <body>
+      <!--contains all the div-->
+      <div id="all">
+        <!--mouse  follower-->
+            <div class="cursor"></div>
+        <!--mouse  follower-->
+        <!--loader-->
+            <div id="loader">
+                <span class="color">Group</span>Portal 
+            </div>
+        <!--loader-end-->
+        <!--link-screen-->
+
     <header>
         <!--Menubar-->
         <div id="navigation-bar">
+            <img src="/static/images/willy wonka logo.png" alt="logo">
             <div class="menubar">
                 <span class="first-span"></span>
                 <span class="second-span"></span>
@@ -32,6 +45,9 @@
 
     </header>
     <div id="navigation-content">
+        <div class="logo">
+            <img src="/static/images/willy wonka logo.png" alt="logo">
+        </div>
         <div class="navigation-close">
             <span class="close-first"></span>
             <span class="close-second"></span>
@@ -55,7 +71,8 @@
             <a href="{% url 'grades_list' %}" data-text="GRADEBOOK" id="gradebook-link">GRADEBOOK</a>
         </div>
     </div>
-    
+
+        
     <div class="container main-content">
         {% block content %}
         {% endblock %}
