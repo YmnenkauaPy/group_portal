@@ -6,5 +6,5 @@ class Event(models.Model):
     description = models.TextField()
     day_month_year = models.DateField()
     time = models.TimeField()
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="group")
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="events_group")
     

@@ -31,15 +31,21 @@ def get_event_data(request, day_month_year):
     try:
         date_object = datetime.strptime(day_month_year, '%Y-%m-%d').date()
         events = models.Event.objects.filter(
-        Q(group__members=request.user) | Q(group__admin=request.user),
+        Q(group__members=request.user) | Q(group__admin=request.user) | Q(group__moderators=request.user),
         day_month_year=date_object
         ).distinct()
 
         if events.exists():
             data = []
             for event in events:
+                role = 'member' 
+                if request.user == event.group.admin:
+                    role = 'admin'
+                elif request.user in event.group.moderators.all():
+                    role = 'moderator'
+  
                 data.append({
-                    'pk':event.pk,
+                    'pk': event.pk,
                     'name': event.name,
                     'description': event.description,
                     'day_month_year': event.day_month_year.strftime('%Y-%m-%d'),
@@ -48,8 +54,9 @@ def get_event_data(request, day_month_year):
                         'id': event.group.id,
                         'title': event.group.title
                     },
+                    'user_role': role,  
                 })
-            return JsonResponse(data, safe=False)  # safe=False позволяет вернуть список
+            return JsonResponse(data, safe=False)
         else:
             return JsonResponse({'error': 'Event not found'})
     except Exception as e:
@@ -82,11 +89,17 @@ def edit_event(request, pk):
 
 def events_for_month(request, year, month):
     events = models.Event.objects.filter(
-        Q(group__members=request.user) | Q(group__admin=request.user),
+        Q(group__members=request.user) | Q(group__admin=request.user) | Q(group__moderators=request.user),
         day_month_year__year=year)
 
     events_by_date = {}
     for event in events:
+        role = 'member' 
+        if request.user == event.group.admin:
+            role = 'admin'
+        elif request.user in event.group.moderators.all():
+            role = 'moderator'
+
         event_date = event.day_month_year.strftime('%Y-%m-%d')
         if event_date not in events_by_date:
             events_by_date[event_date] = []
@@ -97,7 +110,8 @@ def events_for_month(request, year, month):
             'group': {
                 'id': event.group.id,
                 'title': event.group.title
-            }
+            },
+            'user_role':role,
         })
 
     return JsonResponse(events_by_date)
