@@ -218,6 +218,7 @@ document.querySelectorAll(".days").forEach(day => {
 
     let day_month_year = `${date.getFullYear()}-${month_}-${day_}`
     const url = `/event/${day_month_year}/`
+    
     fetch(url) 
       .then(response => {
         if (!response.ok) {
@@ -246,12 +247,35 @@ document.querySelectorAll(".days").forEach(day => {
               <button type="submit" class="btn btn-danger">Delete</button>
           </form><br>{% endif %}`;
         })
-        content += `{% if user.is_authenticated and user.is_superuser %}<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>{% endif %}`
-        document.querySelector('.info').innerHTML = content;
+        fetch('/role/is/')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();  
+          })
+          .then(data => {
+            if (data == 'not member') {
+              content += `<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>`
+              document.querySelector('.info').innerHTML = content;
+            }
+          })
       })
       .catch(error => {
-        document.querySelector('.info').innerHTML = `<i>${day_month_year}</i><br><h5>No events</h5>
-        {% if user.is_authenticated and user.is_superuser %}<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>{%endif%}`;
+        document.querySelector('.info').innerHTML = `<i>${day_month_year}</i><br><h5>No events</h5>`
+        fetch('/role/is/')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();  
+          })
+          .then(data => {
+            if (data == 'not member') {
+              document.querySelector('.info').innerHTML += `<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>`
+            };
+          })
+        
         console.error('Error:', error);
       });
   });

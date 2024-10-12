@@ -3,7 +3,7 @@
 {% block content %}
 {% load custom_tags %}
 <h2>List of materials</h2>
-{% if user.is_authenticated and user.is_superuser %}
+{% if role == 'not member' %}
     <a href="{% url 'add_material' %}" class="btn btn-primary">Add new material</a>
 {% endif %}
 
@@ -23,8 +23,10 @@
                 <br>
                 <small>group: {{ material.group.title }}</small><br>
                 <small>author: {{ material.author }}</small>
-                <a href="{% url 'edit_material' material.pk %}">edit material</a>
-                <a href="{% url 'delete_material' material.pk %}">delete material</a>
+                {% if user == material.group.admin or user in material.group.moderators.all %}
+                    <a href="{% url 'edit_material' material.pk %}">edit material</a>
+                    <a href="{% url 'delete_material' material.pk %}">delete material</a>
+                {% endif %}
             </div>
         </li>
     {% empty %}
