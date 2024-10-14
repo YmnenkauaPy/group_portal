@@ -6,7 +6,7 @@ from group.models import Group
 class MaterialForm(forms.ModelForm):
     class Meta:
         model = models.Material
-        fields = ['name', 'content', 'group']
+        fields = ['name', 'content', 'group', 'youtube_link']
         widgets = {
             "content": forms.FileInput(),
         }
@@ -16,7 +16,7 @@ class MaterialForm(forms.ModelForm):
 
         if self.user:
             available_groups = Group.objects.filter(
-                Q(members=self.user) | Q(admin=self.user) | Q(moderators=self.user)
+                Q(admin=self.user) | Q(moderators=self.user)
             ).distinct()
             
             self.fields['group'].queryset = available_groups
