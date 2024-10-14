@@ -4,9 +4,16 @@ from django.db.models import Q
 from materials import forms
 from group.models import Group
 
+def role_is(user):
+    role = 'member'
+    if Q(group__admin=user) | Q(group__moderators=user):
+        role='not member'
+    return role
+
 def materials_list(request):
     materials = models.Material.objects.filter(Q(group__members=request.user) | Q(group__admin=request.user) | Q(group__moderators=request.user))
-    return render(request, 'materials/materials_list.html', {'materials': materials})
+    role = role_is(request.user)
+    return render(request, 'materials/materials_list.html', {'materials': materials, 'role':role})
 
 def add_material(request):
     if request.method == 'POST':
