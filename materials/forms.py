@@ -1,26 +1,24 @@
 from django import forms
-from event.models import Event
-from group.models import Group
+from materials import models
 from django.db.models import Q
+from group.models import Group
 
-class EventForm(forms.ModelForm):
+class MaterialForm(forms.ModelForm):
     class Meta:
-        model = Event
-        fields = ['name', 'description', 'day_month_year', 'time', 'group']
+        model = models.Material
+        fields = ['name', 'content', 'group']
         widgets = {
-            'day_month_year': forms.DateInput(attrs={'readonly': True,}),
-            'time': forms.TimeInput(attrs={'type': 'time'}),         
+            "content": forms.FileInput(),
         }
-
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
-        super(EventForm, self).__init__(*args, **kwargs)
+        super(MaterialForm, self).__init__(*args, **kwargs)
 
         if self.user:
             available_groups = Group.objects.filter(
                 Q(members=self.user) | Q(admin=self.user) | Q(moderators=self.user)
             ).distinct()
-
+            
             self.fields['group'].queryset = available_groups
             
             if available_groups.exists():

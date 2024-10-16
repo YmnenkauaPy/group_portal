@@ -218,7 +218,6 @@ document.querySelectorAll(".days").forEach(day => {
 
     let day_month_year = `${date.getFullYear()}-${month_}-${day_}`
     const url = `/event/${day_month_year}/`
-    
     fetch(url) 
       .then(response => {
         if (!response.ok) {
@@ -236,9 +235,8 @@ document.querySelectorAll(".days").forEach(day => {
           <h6>Group: ${event.group.title}</h6>
           <h6>time: ${event.time}</h6>`;
           
-          // Кнопки редактирования и удаления видны только для суперпользователя
           
-          content += `{% if user.is_authenticated and user.is_superuser or user.is_moderator %}
+          content += `{% if user.is_authenticated and user.is_superuser %}
           <form action="/event/edit/${event.pk}" method="post" class="mr-2">
               {% csrf_token %}
               <button type="submit" class="btn btn-warning" style="margin-left: 5px;">Edit</button>
@@ -248,12 +246,12 @@ document.querySelectorAll(".days").forEach(day => {
               <button type="submit" class="btn btn-danger">Delete</button>
           </form><br>{% endif %}`;
         })
-        content += `{% if user.is_authenticated and user.is_superuser or user.is_moderator %}<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>{% endif %}`
+        content += `{% if user.is_authenticated and user.is_superuser %}<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>{% endif %}`
         document.querySelector('.info').innerHTML = content;
       })
       .catch(error => {
         document.querySelector('.info').innerHTML = `<i>${day_month_year}</i><br><h5>No events</h5>
-        {% if user.is_authenticated and user.is_superuser or user.is_moderator %}<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>{%endif%}`;
+        {% if user.is_authenticated and user.is_superuser %}<a style="font-size:30px" href="/event/create/${day_month_year}">Create event</a><br>{%endif%}`;
         console.error('Error:', error);
       });
   });

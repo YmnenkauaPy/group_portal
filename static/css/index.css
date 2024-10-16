@@ -73,7 +73,7 @@ body{
     display: block;
 }
 #particles{
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     height: 100%;
@@ -81,6 +81,8 @@ body{
     background-size: cover;
     background-position: 50% 50%;
     display: block;
+    pointer-events: none;
+    
 }
 #navigation-content{
     height: 100vh;

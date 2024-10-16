@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3" style="margin-left: 15px;">
+    <h2>Are you sure you want to delete this material?</h2>
+    <p>{{ material.name }}</p>
+    <img src="{{ material.content.url }}" alt="current media" style="max-width: 100px;"><br>
+    <form action="{% url 'delete_material' material.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'materials_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

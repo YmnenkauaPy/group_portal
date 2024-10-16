@@ -33,7 +33,7 @@
     <header>
         <!--Menubar-->
         <div id="navigation-bar">
-            <img src="/static/images/willy wonka logo.png" alt="logo">
+            <img src="/static/images/logoo.png" alt="logo" width="110" height="10">
             <div class="menubar">
                 <span class="first-span"></span>
                 <span class="second-span"></span>
@@ -46,7 +46,7 @@
     </header>
     <div id="navigation-content">
         <div class="logo">
-            <img src="/static/images/willy wonka logo.png" alt="logo">
+            <img src="/static/images/logoo.png" alt="logo" width="110" height="10">
         </div>
         <div class="navigation-close">
             <span class="close-first"></span>
@@ -61,23 +61,23 @@
                 <a href="{% url 'register' %}" data-text="REGISTER" id="blog-link">REGISTER</a>
             {% else %}
                 <form action="{% url 'logout' %}" method="POST" style="display:inline;">
-                {% csrf_token %}
-                <a href="#" data-text="LOGOUT" id="logout-link" onclick="this.closest('form').submit(); return false;">LOGOUT</a>
-            </form>
+                    {% csrf_token %}
+                    <a href="#" data-text="LOGOUT" id="logout-link" onclick="this.closest('form').submit(); return false;">LOGOUT</a>
+                </form>
             {% endif %}
             
+            <a href="{% url 'materials_list' %}" data-text="MATERIALS LIST" id="materials-link">MATERIALS</a>
             <a href="{% url 'thread_list' %}" data-text="THREAD LIST" id="thread-link">THREAD LIST</a>
             <a href="{% url 'calendar' %}" data-text="CALENDAR" id="calendar-link">CALENDAR</a>
             <a href="{% url 'grades_list' %}" data-text="GRADEBOOK" id="gradebook-link">GRADEBOOK</a>
         </div>
     </div>
-
-        
+    
     <div class="container main-content">
         {% block content %}
         {% endblock %}
     </div>
-
+    <div id="particles"></div>  
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/particles.js"></script>
     <script src="/static/js/particles.min.js"></script>
