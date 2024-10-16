@@ -4,6 +4,7 @@ from django.db.models import Q
 from materials import forms
 from group.models import Group
 
+
 def role_is(user):
     role = 'member'
     if Q(group__admin=user) | Q(group__moderators=user):
@@ -17,17 +18,31 @@ def materials_list(request):
 
 def add_material(request):
     if request.method == 'POST':
+        name = request.POST.get('name')
+        content = request.FILES.get('content')
+        youtube_link = request.POST.get('youtube_link')
+
         form = forms.MaterialForm(request.POST, request.FILES, user=request.user)
+
+        if not name:
+            form.add_error('name', "You must provide a name for the material.")
+        if not (content or youtube_link):
+            form.add_error(None, "You must provide at least one type of content (file or YouTube link).")
+
         if form.is_valid():
             material = form.save(commit=False)
+            material.name = name  
             material.author = request.user
+
             material.save()
-        
             return redirect('materials_list')
+
     else:
         form = forms.MaterialForm(user=request.user)
 
     return render(request, 'materials/add_material.html', {'form': form})
+
+
 
 def edit_material(request, pk):
     material = get_object_or_404(models.Material, pk=pk)
