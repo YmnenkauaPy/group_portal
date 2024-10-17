@@ -4,24 +4,26 @@
 {% if custom_user.profile_picture %}
     <img src="{{ custom_user.profile_picture.url }}" alt="Profile Picture" width="180px"/>
 {% endif %}
-<h2>{{ custom_user.username }}</h2>
-<p>{{ custom_user.details }}</p>
-<p>Roles:</p>
+<div class="portfolio-header"><span class="color">
+{{ custom_user.username }}</span></div>
+  <div class="about-first-paragraph wow">
+<p><span class="my-color">Details:</span> {{ custom_user.details }}</p>
 <ul>
     {% for group_info in user_roles %}
       <li>
         <strong>{{ group_info.group.title }}</strong> - 
-        You are: {{ group_info.role }}
+        <span class="my-color">You are:</span> {{ group_info.role }}
       </li>
     {% empty %}
       <li>You are not a member of any group.</li>
     {% endfor %}
 </ul>
-<p>Data joined: {{ custom_user.date_joined }}</p>
+<p><span class="my-color">Data joined:</span> {{ custom_user.date_joined }}</p>
+
 
 <form method="POST" action = "{% url 'update_profile' %}">
     {% csrf_token %}
     <button>Change profile details</button>
 </form>
-
+</div>
 {% endblock %}
