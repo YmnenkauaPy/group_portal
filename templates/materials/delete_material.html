@@ -1,10 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load custom_tags %}
 <div class="container mt-3" style="margin-left: 15px;">
     <h2>Are you sure you want to delete this material?</h2>
     <p>{{ material.name }}</p>
-    <img src="{{ material.content.url }}" alt="current media" style="max-width: 100px;"><br>
+    {% if material.content %}
+        {# Обработка изображений #}
+        {% if material.content.url|endswith:".jpg" or material.content.url|endswith:".png" or material.content.url|endswith:".jpeg" %}
+            <img src="{{ material.content.url }}" alt="img" style="max-width: 100px;">
+        {# Обработка видео #}
+        {% elif material.content.url|endswith:".mp4" %}
+            <video width="320" height="240" controls>
+                <source src="{{ material.content.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        {# Обработка документов (docx, xlsx, pptx, pdf и других) #}
+        {% elif material.content.url|endswith:".docx" or material.content.url|endswith:".xlsx" or material.content.url|endswith:".pptx" or material.content.url|endswith:".pdf" %}
+            <a href="{{ material.content.url }}" target="_blank">
+                Download {{ material.content.name|split:"/" }}
+            </a>
+        {% else %}
+            <p>Unsupported file type</p>
+        {% endif %}
+    {% endif %}
+    {% if material.youtube_link %}
+        <div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ material.youtube_link }}" frameborder="0" allowfullscreen></iframe>
+        </div>
+    {% endif %}
+
     <form action="{% url 'delete_material' material.id %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Delete</button>

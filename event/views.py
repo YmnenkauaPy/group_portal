@@ -38,12 +38,6 @@ def get_event_data(request, day_month_year):
         if events.exists():
             data = []
             for event in events:
-                role = 'member' 
-                if request.user == event.group.admin:
-                    role = 'admin'
-                elif request.user in event.group.moderators.all():
-                    role = 'moderator'
-  
                 data.append({
                     'pk': event.pk,
                     'name': event.name,
@@ -54,13 +48,18 @@ def get_event_data(request, day_month_year):
                         'id': event.group.id,
                         'title': event.group.title
                     },
-                    'user_role': role,  
                 })
             return JsonResponse(data, safe=False)
         else:
             return JsonResponse({'error': 'Event not found'})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+def role_is(request):
+    role = 'member'
+    if Q(group__admin=request.user) | Q(group__moderators=request.user):
+        role='not member'
+    return JsonResponse(role, safe=False)
   
 def delete_event(request, pk):
     event = get_object_or_404(models.Event, pk=pk)
@@ -94,12 +93,6 @@ def events_for_month(request, year, month):
 
     events_by_date = {}
     for event in events:
-        role = 'member' 
-        if request.user == event.group.admin:
-            role = 'admin'
-        elif request.user in event.group.moderators.all():
-            role = 'moderator'
-
         event_date = event.day_month_year.strftime('%Y-%m-%d')
         if event_date not in events_by_date:
             events_by_date[event_date] = []
@@ -110,8 +103,7 @@ def events_for_month(request, year, month):
             'group': {
                 'id': event.group.id,
                 'title': event.group.title
-            },
-            'user_role':role,
+            }
         })
 
     return JsonResponse(events_by_date)

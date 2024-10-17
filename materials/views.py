@@ -4,26 +4,56 @@ from django.db.models import Q
 from materials import forms
 from group.models import Group
 
+def role_is(user):
+    role = 'member'
+    if Group.objects.filter(Q(admin=user) | Q(moderators=user)).exists():
+        role = 'not member'
+    return role
+
+
 def materials_list(request):
-    materials = models.Material.objects.filter(Q(group__members=request.user) | Q(group__admin=request.user) | Q(group__moderators=request.user))
-    return render(request, 'materials/materials_list.html', {'materials': materials})
+    materials = models.Material.objects.none()
+    role = None
+
+    if request.user.is_authenticated:
+        materials = models.Material.objects.filter(
+            Q(group__members=request.user) | Q(group__admin=request.user) | Q(group__moderators=request.user)
+        )
+        role = role_is(request.user)
+
+    return render(request, 'materials/materials_list.html', {'materials': materials, 'role': role})
+
 
 def add_material(request):
     if request.method == 'POST':
+        name = request.POST.get('name')
+        content = request.FILES.get('content')
+        youtube_link = request.POST.get('youtube_link')
+
         form = forms.MaterialForm(request.POST, request.FILES, user=request.user)
+
+        if not name:
+            form.add_error('name', "You must provide a name for the material.")
+        if not (content or youtube_link):
+            form.add_error(None, "You must provide at least one type of content (file or YouTube link).")
+
         if form.is_valid():
             material = form.save(commit=False)
+            material.name = name  
             material.author = request.user
+
             material.save()
-        
             return redirect('materials_list')
+
     else:
         form = forms.MaterialForm(user=request.user)
 
     return render(request, 'materials/add_material.html', {'form': form})
 
+
 def edit_material(request, pk):
     material = get_object_or_404(models.Material, pk=pk)
+
     groups = Group.objects.filter(Q(members=request.user) | Q(admin=request.user) | Q(moderators=request.user))
 
     if request.method == 'POST':
@@ -37,13 +67,14 @@ def edit_material(request, pk):
     else:
         form = forms.MaterialForm(instance=material)
 
-    return render(request, 'materials/edit_material.html', {'form': form, 'material': material, 'groups':groups})
+    return render(request, 'materials/edit_material.html', {'form': form, 'material': material, 'groups': groups})
+
 
 def delete_material(request, pk):
     material = get_object_or_404(models.Material, pk=pk)
 
     if request.method == 'POST':
-        material.delete() 
-        return redirect('materials_list') 
+        material.delete()
+        return redirect('materials_list')
 
     return render(request, 'materials/delete_material.html', {'material': material})

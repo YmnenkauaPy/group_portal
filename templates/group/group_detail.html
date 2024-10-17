@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{{ group.title }}</h1>
-<p>{{ group.description }}</p>
-<p>{{ group.created_at }}</p>
-<p>Admin: {{ group.admin.username }}</p>
-<h2>Members:</h2>
+<div class="portfolio-header"><span class="color">
+{{ group.title }}</span></div>
+<div class="about-first-paragraph wow">
+<p><span class="my-color">Description:</span> {{ group.description }}</p></div>
+<div class="about-first-paragraph wow">
+{{ group.created_at }}</div>
+<div class="about-first-paragraph wow"><span class="my-color">
+Admin:</span> {{ group.admin.username }}</div>
+<div class="about-first-paragraph wow">
+<span class="my-color">Members:</span></div>
 <ul>
     {% for member_info in members_with_roles %}
         <li>{{ member_info.user.username }} <small>{{ member_info.role }}</small> 
@@ -36,20 +41,22 @@
     <button>add member</button>
     <input id="search" type="text" placeholder="Search for users" oninput="search_users()" autocomplete="off">
     <div id="searchResults"></div>
-    
+    <div class="about-first-paragraph wow">
     <h5 id="selectedUsersHeader" style="display: none;">Selected Users:</h5>
     <ul id="selectedUsersList"></ul>
-    <input type="hidden" name="selected_users" id="selectedUsersInput">
+    <input type="hidden" name="selected_users" id="selectedUsersInput"></div>
 
 </form>
 {% endif %}
-<ul>
-    <li><a href="{% url 'group_list' %}">Back to group list</a></li>
+<div id="portfolio-content">
+<div class="portfolio-text">
+    <div class="button"><a href="{% url 'group_list' %}"><button><span class="index"> Back to group list<i class="gg-arrow-right"></i></span></button></a></div>
     {% if user == group.admin %}
-    <li><a href="{% url 'update_group' group.pk %}">Update group list</a></li>
-    <li><a href="{% url 'delete_group' group.pk %}">Delete group list</a></li>
+    <div class="button"><a href="{% url 'update_group' group.pk %}"><button><span class="index">Update group list<i class="gg-arrow-right"></i></span></button></a></div>
+    <div class="button"><a href="{% url 'delete_group' group.pk %}"><button><span class="index"> Delete group list<i class="gg-arrow-right"></i></span></button></a></div>
     {% endif %}
-</ul>
+</div>
+</div>
 
 
 <script>

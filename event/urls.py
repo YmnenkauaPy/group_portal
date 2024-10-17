@@ -8,4 +8,5 @@ urlpatterns = [
     path('event/<str:day_month_year>/', views.get_event_data, name='get_event_data'), 
     path('events/<int:year>/<int:month>/', views.events_for_month, name='events_for_month'),
     path('calendar/', views.calendar, name='calendar'), 
+    path('role/is/', views.role_is, name='role_is'), 
 ]
