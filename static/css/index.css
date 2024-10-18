@@ -73,7 +73,7 @@ body{
     display: block;
 }
 #particles{
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     height: 100%;
@@ -81,12 +81,14 @@ body{
     background-size: cover;
     background-position: 50% 50%;
     display: block;
+    pointer-events: none;
+    
 }
 #navigation-content{
     height: 100vh;
     width: 100%;
     position:fixed;
-    z-index: 5;
+    z-index: 6;
     background-color:#020202;
     transform: translateY(-200%);
     display: flex;
@@ -222,6 +224,7 @@ body{
     opacity: 1;
     transform:rotate(-45deg);
 }
+
 .header-image img{
     height: 100vh;
     float: right;
@@ -311,7 +314,7 @@ body{
 }
 .social-media{
     color: white;
-    width:  21px;
+
     ;
     opacity: .6;
     margin: 8px;
@@ -466,8 +469,8 @@ body{
     justify-content: center;
     font-size: 20px;
     font-family: poppins;
-    width: 50%;
-    padding: 30px;
+    width: 80%;
+    padding: 20px;
     font-weight: 400;
 }
 .about-first-paragraph .color{
@@ -772,8 +775,8 @@ body{
     transition: all .4s ease;
     color: whitesmoke;
     padding:10px;
-    padding-bottom: 30px;
-    padding-top: 60px;
+    padding-bottom: 5px;
+    padding-top: 50px;
     font-weight: 900;
 }
 
@@ -801,16 +804,10 @@ padding-bottom: 40px;
 }
 
 .portfolio-text{
-    width: 40%;
+    width: auto;
     padding-left: 1%;
-    margin: 1%;
-    margin-left: -40px;
-    margin-top: 160px;
     z-index: 3;
     opacity: 1;
-    background: #080808;
-    padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 .portfolio-text h2{
@@ -2564,15 +2561,73 @@ for tabs and large phones
 }
 
 body, html {
-    height: 100%; /* Убедитесь, что высота занимает 100% */
-    margin: 0; /* Убираем отступы по умолчанию */
+    height: 100%; 
+    margin: 0; 
 }
 
 .main-content {
-    display: flex; /* Используем Flexbox */
-    flex-direction: column; /* Вертикальная ориентация */
-    justify-content: center; /* Центрируем по вертикали */
-    align-items: center; /* Центрируем по горизонтали, если необходимо */
-    height: calc(100vh - 60px); /* Высота контейнера, чтобы не перекрыть навигацию */
-    margin-top: 60px; /* Отступ сверху для навигации */
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: calc(100vh - 60px); 
+    margin-top: 60px; 
+}
+
+.custom-text {
+    font-size: 12px; 
+    margin-bottom:950px ; 
+    text-align: left; 
+}
+ul {
+    position: relative;
+    z-index: 5; 
+}
+
+.group-list {
+    list-style-type: none; 
+    padding: 0;
+    margin: 0;
+}
+
+
+.group-link {
+    text-decoration: none; 
+    color: #e4e4e4; 
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px 15px; 
+    display: block; 
+    transition: color 0.5s; 
+}
+
+
+.group-link:hover {
+    color: #b8083d; 
+    text-decoration: none; 
+}
+
+.my-color {
+    color: #c70039;
+}
+
+.file-upload {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color:  #c70039;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+}
+
+input[type="file"] {
+    display: none;
 }

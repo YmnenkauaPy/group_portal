@@ -4,14 +4,18 @@ from authentication.models import CustomUser
 from django.db.models import Q
 from django.core.paginator import Paginator
 
-def group_list(request, page):
+def group_list(request):
     if not request.user.is_authenticated:
         groups = []
     else:
         user = CustomUser.objects.get(pk=request.user.id)
         groups = Group.objects.filter(Q(admin=user) | Q(moderators=user) | Q(members=user)).distinct()
+
+    page_number = request.GET.get('page', 1)
+    if not page_number:
+        page_number = 1
     p = Paginator(groups, 27)
-    page = p.get_page(page)
+    page = p.get_page(page_number)
 
     return render(request, 'group/group_list.html', {'groups': page.object_list, 'p':page})
 

@@ -16,29 +16,39 @@
         text-align: center;
     }
 </style>
-<h2>List of Groups</h2>
+<div class="portfolio-header"><span class="color">List</span> of Groups
+    <br>
 {% if user.is_authenticated %}
-    <a href="{% url 'add_group' %}" class="btn btn-primary">Add New Group</a>
+    <div id="portfolio-content">
+    <div class="portfolio-text">
+    <div class="button"><a href="{% url 'add_group' %}"><button><span class="index"> Add New Group<i class="gg-arrow-right"></i></span></button></a></div>
+    </div>
+    </div>
 {% endif %}
-
-<div class="container">
-    <ul>
-        {% for group in groups %}
-            <div class="item">
-                <li>
-                    <a href="{% url 'group_detail' pk=group.pk %}">{{ group.title }}</a>
-                </li>
-            </div>
-        {% empty %}
-        <li>No created groups</li>
-        {% endfor %}
-    </ul>
 </div>
+
+<ul class ="group-list">
+    {% for group in groups %}
+        <li>
+            <a href="{% url 'group_detail' pk=group.pk %}" class="group-link">{{ group.title }}</a>
+        </li>
+    {% empty %}
+    <li>No created groups</li>
+    {% endfor %}
+</ul>
+<div class="header-content">
+    <div class="secondline custom-text">
+    Created by
+<span class="txt-rotate color" data-period="1000"data-rotate='[ " Arkady", " Tanya" ]'></span>
+<span class="slash">|</span>
+</div>
+
 {% if p.has_previous  %}
-    <a href="{% url 'group_list' p.previous_page_number  %}"><<</a>
+<a href="?page={{ p.previous_page_number }}"><<</a>
 {% endif %}
 {% if p.has_next  %}
-    <a href="{% url 'group_list' p.next_page_number  %}">>> {{ page }}</a>
+<a href="?page={{ p.next_page_number }}">>> {{ page }}</a>
 {% endif %}
 <p>Page {{ p.number }}/{{ p.paginator.num_pages }}</p>
+
 {% endblock %}

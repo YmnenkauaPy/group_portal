@@ -8,13 +8,20 @@ from django.core.paginator import Paginator
 
 def role_is(user):
     role = 'member'
-    if Q(group__admin=user) | Q(group__moderators=user):
-        role='not member'
+    if Group.objects.filter(Q(admin=user) | Q(moderators=user)).exists():
+        role = 'not member'
     return role
 
 def materials_list(request, page):
-    materials = models.Material.objects.filter(Q(group__members=request.user) | Q(group__admin=request.user) | Q(group__moderators=request.user))
-    role = role_is(request.user)
+    materials = models.Material.objects.none()
+    role = None
+
+    if request.user.is_authenticated:
+        materials = models.Material.objects.filter(
+            Q(group__members=request.user) | Q(group__admin=request.user) | Q(group__moderators=request.user)
+        )
+        role = role_is(request.user)
+
     p = Paginator(materials, 6)
     page = p.get_page(page)
 
@@ -48,6 +55,7 @@ def add_material(request):
 
 def edit_material(request, pk):
     material = get_object_or_404(models.Material, pk=pk)
+
     groups = Group.objects.filter(Q(members=request.user) | Q(admin=request.user) | Q(moderators=request.user))
 
     if request.method == 'POST':
@@ -61,7 +69,8 @@ def edit_material(request, pk):
     else:
         form = forms.MaterialForm(instance=material)
 
-    return render(request, 'materials/edit_material.html', {'form': form, 'material': material, 'groups':groups})
+    return render(request, 'materials/edit_material.html', {'form': form, 'material': material, 'groups': groups})
+
 
 def delete_material(request, pk):
     material = get_object_or_404(models.Material, pk=pk)
