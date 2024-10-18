@@ -8,7 +8,7 @@
 <a href="{% url 'edit_thread' pk=thread.pk %}" {% if thread.author != request.user %}style="display:none"{% endif %}>Edit</a>
 <br>
 <br>
-<a href="{% url 'thread_list' %}">Back to thread list</a>
+<a href="{% url 'thread_list' 1 %}">Back to thread list</a>
 
 <div class="container mt-3"></div>
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">

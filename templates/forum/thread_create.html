@@ -7,5 +7,5 @@
     {{ form.as_p }}
     <button> Create</button>
 </form>
-<a href = "{% url 'thread_list'%}">Back to thread list</a>
+<a href = "{% url 'thread_list' 1 %}">Back to thread list</a>
 {% endblock %}

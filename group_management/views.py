@@ -61,7 +61,7 @@ def add_group(request):
             user.is_superuser = True
             user.save()
 
-            return redirect('group_list')
+            return redirect('group_list', page=1)
 
     return render(request, 'group_management/add_group.html', {'form':form})
 
@@ -92,7 +92,7 @@ def delete_group(request, pk):
             user.is_superuser = False
             user.save()
 
-        return redirect('group_list') 
+        return redirect('group_list', page=1) 
     return render(request, 'group_management/delete_group.html', {'group': group})
 
 def add_moderator(request, group, user):

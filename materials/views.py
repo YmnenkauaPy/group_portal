@@ -3,6 +3,7 @@ from materials import models
 from django.db.models import Q
 from materials import forms
 from group.models import Group
+from django.core.paginator import Paginator
 
 
 def role_is(user):
@@ -11,10 +12,13 @@ def role_is(user):
         role='not member'
     return role
 
-def materials_list(request):
+def materials_list(request, page):
     materials = models.Material.objects.filter(Q(group__members=request.user) | Q(group__admin=request.user) | Q(group__moderators=request.user))
     role = role_is(request.user)
-    return render(request, 'materials/materials_list.html', {'materials': materials, 'role':role})
+    p = Paginator(materials, 6)
+    page = p.get_page(page)
+
+    return render(request, 'materials/materials_list.html', {'materials': page.object_list, 'role':role, 'p':page})
 
 def add_material(request):
     if request.method == 'POST':
@@ -35,14 +39,12 @@ def add_material(request):
             material.author = request.user
 
             material.save()
-            return redirect('materials_list')
+            return redirect('materials_list', page=1)
 
     else:
         form = forms.MaterialForm(user=request.user)
 
     return render(request, 'materials/add_material.html', {'form': form})
-
-
 
 def edit_material(request, pk):
     material = get_object_or_404(models.Material, pk=pk)
@@ -53,7 +55,7 @@ def edit_material(request, pk):
         
         if form.is_valid():
             form.save()
-            return redirect('materials_list')
+            return redirect('materials_list', page=1)
         else:
             print(form.errors)
     else:
@@ -66,6 +68,6 @@ def delete_material(request, pk):
 
     if request.method == 'POST':
         material.delete() 
-        return redirect('materials_list') 
+        return redirect('materials_list', page=1) 
 
     return render(request, 'materials/delete_material.html', {'material': material})
