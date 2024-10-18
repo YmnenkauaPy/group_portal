@@ -11,10 +11,9 @@ def group_list(request):
         user = CustomUser.objects.get(pk=request.user.id)
         groups = Group.objects.filter(Q(admin=user) | Q(moderators=user) | Q(members=user)).distinct()
 
-    # Добавляем пагинацию
-    paginator = Paginator(groups, 5)  # 10 групп на страницу
-    page_number = request.GET.get('page')  # Получаем номер страницы из GET-запроса
-    page_obj = paginator.get_page(page_number)  # Получаем объект страницы
+    paginator = Paginator(groups, 5)
+    page_number = request.GET.get('page')  
+    page_obj = paginator.get_page(page_number)  
 
     return render(request, 'group/group_list.html', {'page_obj': page_obj})
 
