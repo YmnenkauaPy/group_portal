@@ -4,14 +4,18 @@ from django.views.generic import DetailView
 from forum.models import ForumThread
 from comment.forms import CommentForm
 from forum.forms import ForumThreadForm
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator 
 
-def thread_list(request, page):
+def thread_list(request):
     threads = ForumThread.objects.all()
-    p = Paginator(threads, 27)
-    page = p.get_page(page)
+    
 
-    return render(request, 'forum/thread_list.html', {'threads': page.object_list, 'p':page})
+    paginator = Paginator(threads, 5)  
+    page_number = request.GET.get('page') 
+    page_obj = paginator.get_page(page_number) 
+
+    return render(request, 'forum/thread_list.html', {'page_obj': page_obj})  
+
 
 class ThreadDetailView(DetailView):
     model = ForumThread

@@ -2631,3 +2631,24 @@ ul {
 input[type="file"] {
     display: none;
 }
+
+.pagination {
+    position: relative; /* Или absolute в зависимости от вашей разметки */
+    z-index: 5; /* Увеличь значение, если необходимо */
+}
+
+.button-container {
+    display: flex; /* Используем Flexbox для контейнера */
+}
+
+.button-left {
+    margin-right: auto; /* Сдвигает эту кнопку влево */
+}
+
+.button-center {
+    margin: 0 auto; /* Сдвигает эту кнопку в центр */
+}
+
+.button-right {
+    margin-left: auto; /* Сдвигает эту кнопку вправо */
+}

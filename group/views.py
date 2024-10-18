@@ -11,13 +11,13 @@ def group_list(request):
         user = CustomUser.objects.get(pk=request.user.id)
         groups = Group.objects.filter(Q(admin=user) | Q(moderators=user) | Q(members=user)).distinct()
 
-    page_number = request.GET.get('page', 1)
-    if not page_number:
-        page_number = 1
-    p = Paginator(groups, 27)
-    page = p.get_page(page_number)
+    paginator = Paginator(groups, 5)
+    page_number = request.GET.get('page')  
+    page_obj = paginator.get_page(page_number)  
 
-    return render(request, 'group/group_list.html', {'groups': page.object_list, 'p':page})
+    return render(request, 'group/group_list.html', {'page_obj': page_obj})
+
+
 
 def group_detail(request, pk):
     group = Group.objects.get(pk=pk)
