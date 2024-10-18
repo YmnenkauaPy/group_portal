@@ -50,10 +50,12 @@ Admin:</span> {{ group.admin.username }}</div>
 {% endif %}
 <div id="portfolio-content">
 <div class="portfolio-text">
-    <div class="button"><a href="{% url 'group_list' %}"><button><span class="index"> Back to group list<i class="gg-arrow-right"></i></span></button></a></div>
+    <div class="button-container">
+    <div class="button-left"><a href="{% url 'group_list' %}"><button><span class="index"> Back to group list<i class="gg-arrow-right"></i></span></button></a></div>
     {% if user == group.admin %}
-    <div class="button"><a href="{% url 'update_group' group.pk %}"><button><span class="index">Update group list<i class="gg-arrow-right"></i></span></button></a></div>
-    <div class="button"><a href="{% url 'delete_group' group.pk %}"><button><span class="index"> Delete group list<i class="gg-arrow-right"></i></span></button></a></div>
+    <div class="button-center"><a href="{% url 'update_group' group.pk %}"><button><span class="index">Update group list<i class="gg-arrow-right"></i></span></button></a></div>
+    <div class="button-right"><a href="{% url 'delete_group' group.pk %}"><button><span class="index"> Delete group list<i class="gg-arrow-right"></i></span></button></a></div>
+    </div>
     {% endif %}
 </div>
 </div>

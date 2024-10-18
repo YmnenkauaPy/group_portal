@@ -2,6 +2,7 @@ from django.shortcuts import render
 from group.models import Group
 from authentication.models import CustomUser
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 def group_list(request):
     if not request.user.is_authenticated:
@@ -10,7 +11,14 @@ def group_list(request):
         user = CustomUser.objects.get(pk=request.user.id)
         groups = Group.objects.filter(Q(admin=user) | Q(moderators=user) | Q(members=user)).distinct()
 
-    return render(request, 'group/group_list.html', {'groups': groups})
+    # Добавляем пагинацию
+    paginator = Paginator(groups, 5)  # 10 групп на страницу
+    page_number = request.GET.get('page')  # Получаем номер страницы из GET-запроса
+    page_obj = paginator.get_page(page_number)  # Получаем объект страницы
+
+    return render(request, 'group/group_list.html', {'page_obj': page_obj})
+
+
 
 def group_detail(request, pk):
     group = Group.objects.get(pk=pk)

@@ -2,31 +2,56 @@
 
 {% block content %}
 
-<div class="portfolio-header"><span class="color">List</span> of Groups
+<div class="portfolio-header">
+    <span class="color">List</span> of Groups
     <br>
-{% if user.is_authenticated %}
-    <div id="portfolio-content">
-    <div class="portfolio-text">
-    <div class="button"><a href="{% url 'add_group' %}"><button><span class="index"> Add New Group<i class="gg-arrow-right"></i></span></button></a></div>
-    </div>
-    </div>
-{% endif %}
+    {% if user.is_authenticated %}
+        <div id="portfolio-content">
+            <div class="portfolio-text">
+                <div class="button">
+                    <a href="{% url 'add_group' %}">
+                        <button><span class="index"> Add New Group<i class="gg-arrow-right"></i></span></button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 </div>
 
-<ul class ="group-list">
-    {% for group in groups %}
+<ul class="group-list">
+    {% for group in page_obj %}
         <li>
             <a href="{% url 'group_detail' pk=group.pk %}" class="group-link">{{ group.title }}</a>
         </li>
     {% empty %}
-    <li>No created groups</li>
+        <li>No created groups</li>
     {% endfor %}
 </ul>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
 <div class="header-content">
     <div class="secondline custom-text">
-    Created by
-<span class="txt-rotate color" data-period="1000"data-rotate='[ " Arkady", " Tanya" ]'></span>
-<span class="slash">|</span>
+        Created by
+        <span class="txt-rotate color" data-period="1000" data-rotate='[ " Arkady", " Tanya" ]'></span>
+        <span class="slash">|</span>
+    </div>
 </div>
 
 {% endblock %}
