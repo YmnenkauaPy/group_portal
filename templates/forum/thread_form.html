@@ -10,7 +10,7 @@
 {% if form.instance.pk %}
     <a href="{% url 'thread_detail' pk=form.instance.pk %}">Back to thread</a>
 {% else %}
-    <a href="{% url 'thread_list' %}">Back to thread list</a>
+    <a href="{% url 'thread_list' 1 %}">Back to thread list</a>
 {% endif %}
 {% endblock %}
 
