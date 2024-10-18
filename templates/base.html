@@ -40,7 +40,6 @@
         </div>
         <!--Menubar End-->
 
-
     </header>
     <div id="navigation-content">
         <div class="logo">
@@ -51,10 +50,10 @@
             <span class="close-second"></span>
         </div>
         <div class="navigation-links">
-            <a href="{% url 'group_list' %}" data-text="HOME" id="home-link">HOME</a>
+            <a href="?page=1" data-text="HOME" id="home-link">HOME</a>
             <a href="{% url 'profile_view' %}" data-text="PROFILE" id="portfolio-link">PROFILE</a>   
-            <a href="{% url 'materials_list' %}" data-text="MATERIALS LIST" id="materials-link">MATERIALS</a>
-            <a href="{% url 'thread_list' %}" data-text="THREAD LIST" id="thread-link">THREAD LIST</a>
+            <a href="{% url 'materials_list' 1 %}" data-text="MATERIALS LIST" id="materials-link">MATERIALS</a>
+            <a href="{% url 'thread_list' 1 %}" data-text="THREAD LIST" id="thread-link">THREAD LIST</a>
             <a href="{% url 'calendar' %}" data-text="CALENDAR" id="calendar-link">CALENDAR</a>
             <a href="{% url 'grades_list' %}" data-text="GRADEBOOK" id="gradebook-link">GRADEBOOK</a>
         </div>
@@ -90,6 +89,3 @@
 
 </body>
 </html>
-
-
-

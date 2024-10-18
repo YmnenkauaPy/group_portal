@@ -1,7 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; 
 
+    }
+
+    .item {
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        padding: 5px; 
+        text-align: center;
+    }
+</style>
 <div class="portfolio-header"><span class="color">List</span> of Groups
     <br>
 {% if user.is_authenticated %}
@@ -28,5 +42,13 @@
 <span class="txt-rotate color" data-period="1000"data-rotate='[ " Arkady", " Tanya" ]'></span>
 <span class="slash">|</span>
 </div>
+
+{% if p.has_previous  %}
+<a href="?page={{ p.previous_page_number }}"><<</a>
+{% endif %}
+{% if p.has_next  %}
+<a href="?page={{ p.next_page_number }}">>> {{ page }}</a>
+{% endif %}
+<p>Page {{ p.number }}/{{ p.paginator.num_pages }}</p>
 
 {% endblock %}

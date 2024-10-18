@@ -1,12 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px; 
+    }
+
+    .item {
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        padding: 5px; 
+        text-align: center;
+    }
+</style>
 <h2>Thread list</h2>
 <a href = "{% url 'thread_create' %}"> Create new thread</a>
 <br>
+<div class="container">
     {% for thread in threads %}
-        <p><a href="{% url 'thread_detail' pk=thread.pk %}">{{ thread.title }}</a></p>
-        <small class="text-muted">Created: {{ thread.created_at }}</small>
+        <div class="item">
+            <p><a href="{% url 'thread_detail' pk=thread.pk %}">{{ thread.title }}</a></p>
+            <small class="text-muted">Created: {{ thread.created_at }}</small>
+        </div>
     {% endfor %}
+</div>
+{% if p.has_previous  %}
+    <a href="{% url 'threads_list' p.previous_page_number  %}"><<</a>
+{% endif %}
+{% if p.has_next  %}
+    <a href="{% url 'threads_list' p.next_page_number  %}">>> {{ page }}</a>
+{% endif %}
+<p>Page {{ p.number }}/{{ p.paginator.num_pages }}</p>
 {% endblock %}
 
