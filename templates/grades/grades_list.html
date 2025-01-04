@@ -1,32 +1,55 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>List of grades</h2>
-<table>
+<head>
+    <style>
+        .white { 
+            color: white;       
+        }
+    </style>
+</head>
+<h2 class="white">List of Grades</h2>
+
+<!-- Таблица с оценками -->
+<table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
     <thead>
-        <tr>
-            <th style="border: 1px solid; padding: 8px;">Student</th>
-            <th style="border: 1px solid; padding: 8px;">Subject</th>
-            <th style="border: 1px solid; padding: 8px;">Grade</th>
-            <th style="border: 1px solid; padding: 8px;">Actions</th>
+        <tr style="background-color: #f2f2f2;">
+            <th style="border: 1px solid #000000; padding: 12px; text-align: left;">Student</th>
+            <th style="border: 1px solid #ddd; padding: 12px; text-align: left;">Subject</th>
+            <th style="border: 1px solid #ddd; padding: 12px; text-align: left;">Grade</th>
+            <th style="border: 1px solid #ddd; padding: 12px; text-align: center;">Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for grade in grades %}
         <tr>
-            <td style="border: 1px solid; padding: 8px;">{{ grade.student.username }}</td>
-            <td style="border: 1px solid; padding: 8px;">{{ grade.subject.name }}</td>
-            <td style="border: 1px solid; padding: 8px;">{{ grade.grade }}</td>
-            <td style="border: 1px solid; padding: 8px;">
-                {% if user.is_authenticated and user.is_superuser or user.is_moderator %}<a href="{% url 'edit_grade' grade.id %}">Edit grade</a>
-                <form action="{% url 'delete_grade' grade.id %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit">Delete</button>
-                </form>{% endif %}
+            <td style="border: 1px solid #ddd; padding: 10px;" class="white">{{ grade.student.username }}</td>
+            <td style="border: 1px solid #ddd; padding: 10px;" class="white">{{ grade.subject.name }}</td>
+            <td style="border: 1px solid #ddd; padding: 10px;" class="white">{{ grade.grade }}</td>
+            <td style="border: 1px solid #ddd; padding: 10px; text-align: center;" class="white">
+                {% if user.is_authenticated and user.is_superuser or user.is_moderator %}
+                    <!-- Кнопка для редактирования -->
+                    <a href="{% url 'edit_grade' grade.id %}" class="btn btn-primary btn-sm" style="padding: 5px 10px; text-decoration: none;">Edit grade</a>
+                    
+                    <!-- Форма для удаления -->
+                    <form action="{% url 'delete_grade' grade.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm" style="padding: 5px 10px; border: none; cursor: pointer;">Delete</button>
+                    </form>
+                {% endif %}
             </td>
         </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 10px; color: gray;">No grades available</td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<!-- Кнопка добавления новой оценки -->
 {% if user.is_authenticated and user.is_superuser or user.is_moderator %}
-<a href="{% url 'add_grade' %}">Add new grade</a>{% endif %}
+    <a href="{% url 'add_grade' %}" class="btn btn-success" style="margin-top: 20px; padding: 10px 20px; text-decoration: none; background-color: #28a745; color: white; border-radius: 5px;">Add new grade</a>
+{% endif %}
+
 {% endblock %}

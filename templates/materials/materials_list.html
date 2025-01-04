@@ -3,21 +3,25 @@
 {% block content %}
 {% load custom_tags %}
 <style>
-    .media-container {
-    display: flex;
-    flex-wrap: wrap;  /* Allow items to wrap to the next line */
-    gap: 20px;        /* Space between the items */
-}
+    .media-item {
+        color: white; /* Белый шрифт */
+    }
 
-.media-item {
-    flex: 1 1 calc(25% - 20px); /* Responsive items: 4 items per row with slight margin */
-    box-sizing: border-box;  /* Include padding/border in the element's total width */
-    border: 1px solid #ddd;  /* Optional: add a border */
-    padding: 10px;          /* Add some padding */
-    text-align: center;     /* Center-align text */
-}
+    .action-buttons a {
+        color: white; /* Белые кнопки */
+        background-color: #007bff;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 5px;
+    }
+
+    .action-buttons a:hover {
+        background-color: #0056b3;
+    }
 </style>
 <h2>List of materials</h2>
+
 {% if role == 'not member' %}
     <a href="{% url 'add_material' %}" class="btn btn-primary">Add new material</a>
 {% endif %}
@@ -26,10 +30,11 @@
     {% for material in materials %}
         <div class="media-item">  
             <h4>{{ material.name }}</h4>
+            
             {% if material.content %}
                 {# Photos #}
                 {% if material.content.url|endswith:".jpg" or material.content.url|endswith:".png" or material.content.url|endswith:".jpeg" %}
-                    <img src="{{ material.content.url }}" alt="img" style="max-width: 100%;">
+                    <img src="{{ material.content.url }}" alt="img" style="max-width: 100%">
 
                 {# Videos #}
                 {% elif material.content.url|endswith:".mp4" %}
@@ -38,7 +43,7 @@
                         Your browser does not support the video tag.
                     </video>
 
-                {# Documents (docx, xlsx, pptx, pdf и других) #}
+                {# Documents (docx, xlsx, pptx, pdf and others) #}
                 {% elif material.content.url|endswith:".docx" or material.content.url|endswith:".xlsx" or material.content.url|endswith:".pptx" or material.content.url|endswith:".pdf" %}
                     <a href="{{ material.content.url }}" target="_blank">
                         Download {{ material.content.name|split:"/" }} 
@@ -58,12 +63,14 @@
                 {% endwith %}
             {% endif %}
 
-            <small>group: {{ material.group.title }}</small><br>
-            <small>author: {{ material.author }}</small>
+            <small>Group: {{ material.group.title }}</small><br>
+            <small>Author: {{ material.author }}</small>
 
             {% if user == material.group.admin or user in material.group.moderators.all %}
-                <a href="{% url 'edit_material' material.pk %}">edit material</a>
-                <a href="{% url 'delete_material' material.pk %}">delete material</a>
+                <div class="action-buttons">
+                    <a href="{% url 'edit_material' material.pk %}">Edit Material</a>
+                    <a href="{% url 'delete_material' material.pk %}">Delete Material</a>
+                </div>
             {% endif %}
         </div>  
     {% empty %}

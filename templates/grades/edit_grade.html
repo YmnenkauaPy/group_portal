@@ -1,5 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
+<head>
+    <style>
+        body { 
+            color: white;       
+        }
+        /* Стиль для кнопки */
+        .btn-return {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #e50330;
+            color: white;
+            text-align: center;
+            text-decoration: none; 
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease; 
+        }
+
+        .btn-return:hover {
+            background-color: #b60224;  
+            transform: scale(1.1);  
+            text-decoration: none;
+        }
+    </style>
+</head>
 <h2>Edit Grade</h2>
 <form method="post">
     {% csrf_token %}
@@ -10,5 +35,5 @@
     {% csrf_token %}
     <button type="submit">Delete</button>
 </form>
-<a href="{% url 'grades_list' %}">Return to grades list</a>
+<a href="{% url 'grades_list' %}" class="btn-return">Return to grades list</a>
 {% endblock %}

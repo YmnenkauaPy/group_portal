@@ -2,6 +2,35 @@
 
 {% block content %}
 {% load custom_tags %}
+<head>
+    <style>
+        body {
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container img {
+            max-width: 100px;
+            margin-top: 10px;
+        }
+
+        .container video {
+            margin-top: 10px;
+        }
+
+        .btn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
 <div class="container mt-3" style="margin-left: 15px;">
     <h2>Are you sure you want to delete this material?</h2>
     <p>{{ material.name }}</p>

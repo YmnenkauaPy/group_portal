@@ -1,6 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<head>
+    <style>
+        /* Add your styles here */
+        .action-button {
+            padding: 5px 10px;
+            margin-left: 10px;
+            background-color: #e50330; 
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .action-button:hover {
+            background-color: #e50330; 
+        }
+    </style>
+</head>
 <div class="portfolio-header"><span class="color">
 {{ group.title }}</span></div>
 <div class="about-first-paragraph wow">
@@ -16,18 +34,27 @@ Admin:</span> {{ group.admin.username }}</div>
         <li>{{ member_info.user.username }} <small>{{ member_info.role }}</small> 
             {% if member_info.role != 'Moderator' and member_info.user.id != user.id %}
                 {% if user == group.admin or user in group.moderators.all %}
-                    <a href="{% url 'add_moderator' group.pk member_info.user.pk %}">make moderator</a>
+                    <form action="{% url 'add_moderator' group.pk member_info.user.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="action-button">Make Moderator</button>
+                    </form>
                 {% endif %}
             {% endif %}
             {% if member_info.role != 'Member' and member_info.user.id != user.id %}
                 {% if user == group.admin or user in group.moderators.all %}
-                    <a href="{% url 'remove_moderator' group.pk member_info.user.pk %}">delete from moderator</a>
+                    <form action="{% url 'remove_moderator' group.pk member_info.user.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="action-button">Delete from Moderator</button>
+                    </form>
                 {% endif %}
             {% endif %}
 
             {% if user == group.admin or user in group.moderators.all %}
                 {% if member_info.user.id != user.id %}
-                    <a href="{% url 'delete_member' group.pk member_info.user.pk %}">delete from group</a>
+                    <form action="{% url 'delete_member' group.pk member_info.user.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="action-button">Delete from Group</button>
+                    </form>
                 {% endif %}
             {% endif %}
         </li>
@@ -74,26 +101,30 @@ Admin:</span> {{ group.admin.username }}</div>
     function updateSelectedUsersList() {
         const selectedUsersList = document.getElementById('selectedUsersList');
         const selectedUsersHeader = document.getElementById('selectedUsersHeader');
-        
-        selectedUsersList.innerHTML = ''; 
+        try {
+            selectedUsersList.innerHTML = ''; 
 
-        if (selectedUsers.length > 0) {
-            selectedUsersHeader.style.display = 'block';  
-            selectedUsers.forEach(user => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `${user.username}, id: ${user.id}`;  
+            if (selectedUsers.length > 0) {
+                selectedUsersHeader.style.display = 'block';  
+                selectedUsers.forEach(user => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${user.username}, id: ${user.id}`;  
 
-                const removeButton = document.createElement('button');
-                removeButton.textContent = 'Remove from list';  
-                removeButton.onclick = () => removeUser(user.id);  
+                    const removeButton = document.createElement('button');
+                    removeButton.textContent = 'Remove from list';  
+                    removeButton.onclick = () => removeUser(user.id);  
 
-                listItem.appendChild(removeButton);  
-                selectedUsersList.appendChild(listItem); 
-            });
-            document.getElementById('selectedUsersInput').value = selectedUsers.map(user => user.id).join(','); 
-        } else {
-            selectedUsersHeader.style.display = 'none';  
-        }
+                    listItem.appendChild(removeButton);  
+                    selectedUsersList.appendChild(listItem); 
+                });
+                document.getElementById('selectedUsersInput').value = selectedUsers.map(user => user.id).join(','); 
+            } else {
+                selectedUsersHeader.style.display = 'none';  
+            }
+    } catch (err) {
+        console.log("ERROR=>", err)
+    }
+    
     }
 
     async function search_users() {
