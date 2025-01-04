@@ -3,6 +3,7 @@
 {% block content %}
 {% load custom_tags %}
 <style>
+<<<<<<< HEAD
     .media-item {
         color: white; /* Белый шрифт */
     }
@@ -18,15 +19,31 @@
 
     .action-buttons a:hover {
         background-color: #0056b3;
+=======
+    .media-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px; 
+
+    }
+
+    .media-item {
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        padding: 5px; 
+        text-align: center;
+>>>>>>> 18f9a29287dfb04d5469d84edf8d66ab1e5d5f35
     }
 </style>
+<br><br><br><br>
 <h2>List of materials</h2>
 
 {% if role == 'not member' %}
     <a href="{% url 'add_material' %}" class="btn btn-primary">Add new material</a>
 {% endif %}
+<br>
 
-<div class="media-container"> 
+<div class="media-container" > 
     {% for material in materials %}
         <div class="media-item">  
             <h4>{{ material.name }}</h4>
@@ -34,16 +51,24 @@
             {% if material.content %}
                 {# Photos #}
                 {% if material.content.url|endswith:".jpg" or material.content.url|endswith:".png" or material.content.url|endswith:".jpeg" %}
+<<<<<<< HEAD
                     <img src="{{ material.content.url }}" alt="img" style="max-width: 100%">
+=======
+                    <img src="{{ material.content.url }}" alt="img">
+>>>>>>> 18f9a29287dfb04d5469d84edf8d66ab1e5d5f35
 
                 {# Videos #}
                 {% elif material.content.url|endswith:".mp4" %}
-                    <video width="320" height="240" controls>
+                    <video controls>
                         <source src="{{ material.content.url }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
 
+<<<<<<< HEAD
                 {# Documents (docx, xlsx, pptx, pdf and others) #}
+=======
+                {# Documents (docx, xlsx, pptx, pdf) #}
+>>>>>>> 18f9a29287dfb04d5469d84edf8d66ab1e5d5f35
                 {% elif material.content.url|endswith:".docx" or material.content.url|endswith:".xlsx" or material.content.url|endswith:".pptx" or material.content.url|endswith:".pdf" %}
                     <a href="{{ material.content.url }}" target="_blank">
                         Download {{ material.content.name|split:"/" }} 
@@ -57,7 +82,7 @@
                 {% with material.youtube_link|extract_youtube_id as video_id %}
                     {% if video_id %}
                         <div>
-                            <iframe width="320" height="240" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
+                            <iframe width="100%" height="150" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
                         </div>
                     {% endif %}
                 {% endwith %}
@@ -77,4 +102,16 @@
         <div>No materials</div>
     {% endfor %}
 </div>
+<<<<<<< HEAD
 {% endblock %}
+=======
+<br>
+{% if p.has_previous  %}
+    <a href="{% url 'materials_list' p.previous_page_number  %}"><<</a>
+{% endif %}
+{% if p.has_next  %}
+    <a href="{% url 'materials_list' p.next_page_number  %}">>> {{ page }}</a>
+{% endif %}
+<p>Page {{ p.number }}/{{ p.paginator.num_pages }}</p>
+{% endblock %}
+>>>>>>> 18f9a29287dfb04d5469d84edf8d66ab1e5d5f35
