@@ -3,6 +3,23 @@
 {% block content %}
 {% load custom_tags %}
 <style>
+<<<<<<< HEAD
+    .media-item {
+        color: white; /* Белый шрифт */
+    }
+
+    .action-buttons a {
+        color: white; /* Белые кнопки */
+        background-color: #007bff;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 5px;
+    }
+
+    .action-buttons a:hover {
+        background-color: #0056b3;
+=======
     .media-container {
         display: flex;
         flex-wrap: wrap;
@@ -15,10 +32,12 @@
         border: 1px solid #ddd;
         padding: 5px; 
         text-align: center;
+>>>>>>> 18f9a29287dfb04d5469d84edf8d66ab1e5d5f35
     }
 </style>
 <br><br><br><br>
 <h2>List of materials</h2>
+
 {% if role == 'not member' %}
     <a href="{% url 'add_material' %}" class="btn btn-primary">Add new material</a>
 {% endif %}
@@ -28,10 +47,15 @@
     {% for material in materials %}
         <div class="media-item">  
             <h4>{{ material.name }}</h4>
+            
             {% if material.content %}
                 {# Photos #}
                 {% if material.content.url|endswith:".jpg" or material.content.url|endswith:".png" or material.content.url|endswith:".jpeg" %}
+<<<<<<< HEAD
+                    <img src="{{ material.content.url }}" alt="img" style="max-width: 100%">
+=======
                     <img src="{{ material.content.url }}" alt="img">
+>>>>>>> 18f9a29287dfb04d5469d84edf8d66ab1e5d5f35
 
                 {# Videos #}
                 {% elif material.content.url|endswith:".mp4" %}
@@ -40,7 +64,11 @@
                         Your browser does not support the video tag.
                     </video>
 
+<<<<<<< HEAD
+                {# Documents (docx, xlsx, pptx, pdf and others) #}
+=======
                 {# Documents (docx, xlsx, pptx, pdf) #}
+>>>>>>> 18f9a29287dfb04d5469d84edf8d66ab1e5d5f35
                 {% elif material.content.url|endswith:".docx" or material.content.url|endswith:".xlsx" or material.content.url|endswith:".pptx" or material.content.url|endswith:".pdf" %}
                     <a href="{{ material.content.url }}" target="_blank">
                         Download {{ material.content.name|split:"/" }} 
@@ -60,18 +88,23 @@
                 {% endwith %}
             {% endif %}
 
-            <small>group: {{ material.group.title }}</small><br>
-            <small>author: {{ material.author }}</small>
+            <small>Group: {{ material.group.title }}</small><br>
+            <small>Author: {{ material.author }}</small>
 
             {% if user == material.group.admin or user in material.group.moderators.all %}
-                <a href="{% url 'edit_material' material.pk %}">edit material</a>
-                <a href="{% url 'delete_material' material.pk %}">delete material</a>
+                <div class="action-buttons">
+                    <a href="{% url 'edit_material' material.pk %}">Edit Material</a>
+                    <a href="{% url 'delete_material' material.pk %}">Delete Material</a>
+                </div>
             {% endif %}
         </div>  
     {% empty %}
         <div>No materials</div>
     {% endfor %}
 </div>
+<<<<<<< HEAD
+{% endblock %}
+=======
 <br>
 {% if p.has_previous  %}
     <a href="{% url 'materials_list' p.previous_page_number  %}"><<</a>
@@ -81,3 +114,4 @@
 {% endif %}
 <p>Page {{ p.number }}/{{ p.paginator.num_pages }}</p>
 {% endblock %}
+>>>>>>> 18f9a29287dfb04d5469d84edf8d66ab1e5d5f35
